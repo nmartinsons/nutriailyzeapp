@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:firebase_ai/firebase_ai.dart';
+// import 'package:firebase_ai/firebase_ai.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
