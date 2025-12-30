@@ -16,26 +16,29 @@ class _LoginScreenState extends State<LoginScreen> {
   // Initialize Controller
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  // Allows validation of the entire form
   final _formKey = GlobalKey<FormState>();
+  // Toggles password visibility
   bool _isPasswordVisible = false;
   bool _isLoading = false; // To show spinner
 
   Future<void> _handleLogin() async {
-    // A. Validate Form
+    // Validate Form
     if (!_formKey.currentState!.validate()) return;
 
-    // B. Start Loading
+    // Start Loading
     setState(() => _isLoading = true);
 
+    // Variables for email and password
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
     try {
-      // C. CALL SUPABASE
+      // CALL SUPABASE
       final AuthResponse res = await Supabase.instance.client.auth
           .signInWithPassword(email: email, password: password);
 
-      // D. Handle Success
+      // Handle Success
       if (mounted) {
         if (res.session != null) {
           Navigator.pushReplacement(
@@ -45,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
     } on AuthException catch (e) {
-      // E. Handle Supabase Errors (e.g. User already exists)
+      // Handle Supabase Errors (e.g. User already exists)
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.message), backgroundColor: Colors.redAccent),
@@ -102,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: Form(
-            key: _formKey,
+            key: _formKey, // enables validation
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -112,6 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _emailController,
                   style: const TextStyle(color: Color(0xFF272727)),
                   // Form validation
+                  // if null is returned -> valid, otherwise not valid
                   validator: (value) {
                     // Validation logic
                     final error = FormBuilderValidators.compose([
@@ -121,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       FormBuilderValidators.email(
                         errorText: 'Enter a valid email.',
                       ),
-                    ])(value);
+                    ])(value); // calls validator with value
                     return error;
                   },
                   cursorColor: const Color(0xFF272727),
@@ -138,9 +142,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     filled: true,
                     fillColor: Color(0xFFF6F6F6),
+                    // placeholder
                     hintText: 'Email',
                     // For visible placeholder
                     hintStyle: TextStyle(color: Color(0xFF272727)),
+                    // No label to the top
                     floatingLabelBehavior: FloatingLabelBehavior.never,
                     // Borders
                     enabledBorder: OutlineInputBorder(
@@ -150,6 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
+                    // border when field is pressed
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Color(0xFFE3DAC9),
@@ -157,28 +164,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
-                    // ERROR BORDER (Matches Enabled Border -> No Red Line)
+                    // ERROR BORDER
                     errorBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color(0xFFF6F6F6), // Same as enabled color
+                        color: Colors.redAccent,
                         width: 1.0,
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
-                    // FOCUSED ERROR BORDER (Matches Focused Border -> No Red Line)
+                    // FOCUSED ERROR BORDER
                     focusedErrorBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color(0xFFE3DAC9), // Same as focused color
+                        color: Colors.redAccent,
                         width: 2.0,
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                   ),
                 ),
-                // 24PX SPACE
                 const SizedBox(height: 24),
                 // PASSWORD FIELD
                 TextFormField(
+                  // Toggles pasword visibility
                   obscureText: !_isPasswordVisible,
                   controller: _passwordController,
                   style: const TextStyle(color: Color(0xFF272727)),
@@ -189,10 +196,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     final error = FormBuilderValidators.compose([
                       FormBuilderValidators.required(
                         errorText: 'Password is required.',
-                      ),
-                      FormBuilderValidators.minLength(
-                        6,
-                        errorText: 'Password must be 6+ characters.',
                       ),
                       FormBuilderValidators.password(),
                     ])(value);
@@ -210,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        // Choose icon based on state
+                        // Choose icon based on state for enabling/disabling visibility
                         _isPasswordVisible
                             ? Icons.visibility
                             : Icons.visibility_off,
@@ -242,18 +245,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
-                    // ERROR BORDER (Matches Enabled Border -> No Red Line)
+                    // ERROR BORDER
                     errorBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color(0xFFF6F6F6), // Same as enabled color
+                        color: Colors.redAccent, // Same as enabled color
                         width: 1.0,
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
-                    // FOCUSED ERROR BORDER (Matches Focused Border -> No Red Line)
+                    // FOCUSED ERROR BORDER
                     focusedErrorBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color(0xFFE3DAC9), // Same as focused color
+                        color: Colors.redAccent, // Same as focused color
                         width: 2.0,
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -263,9 +266,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 24),
                 // Log in button
                 SizedBox(
-                  width: double.infinity, // Forces button to fill the width
+                  width: double
+                      .infinity, // Forces button to fill the full allowed width
                   child: ElevatedButton(
                     // CHECK IF FORM IS VALID
+                    // Button is disabled while loading
                     onPressed: _isLoading ? null : _handleLogin,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(
@@ -282,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(8), // 8px Radius
                       ),
                     ),
-
+                    // Shows spinner instead of text when button is pressed, otherwise button is showed
                     child: _isLoading
                         ? const SizedBox(
                             height: 20,
@@ -307,18 +312,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // TODO: Reset password logic
+                      // TODO: Reset password logic (is not important for now)
                     },
                     style: ButtonStyle(
-                      // Remove the background splash effect
+                      // Removes the background splash effect
                       overlayColor: WidgetStateProperty.all(Colors.transparent),
 
-                      // Remove default padding/sizing (to keep it compact)
-                      padding: WidgetStateProperty.all(EdgeInsets.zero),
-                      minimumSize: WidgetStateProperty.all(Size.zero),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-
-                      // DEFINE COLOR LOGIC
+                      // Removes default padding/sizing (to keep it compact)
+                      padding: WidgetStateProperty.all(
+                        EdgeInsets.zero,
+                      ), // Removes all internal padding inside the button. The text takes up only its natural size
+                      minimumSize: WidgetStateProperty.all(
+                        Size.zero,
+                      ), // same for min width and height
+                      tapTargetSize: MaterialTapTargetSize
+                          .shrinkWrap, // Shrinks the tap target to the widget’s actual size. Prevents Flutter from adding invisible padding around the button
+                      // DEFINES COLOR LOGIC
+                      // Chooses a color dynamically based on the button’s current state
                       foregroundColor: WidgetStateProperty.resolveWith<Color>((
                         states,
                       ) {
@@ -335,7 +345,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontSize: 14,
                         decoration: TextDecoration.underline,
-                        decorationColor: Color(0xFFF6F6F6),
                       ),
                     ),
                   ),
