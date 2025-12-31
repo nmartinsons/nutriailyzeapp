@@ -21,25 +21,25 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _isLoading = false; // To show spinner
 
   Future<void> _handleSignup() async {
-    // A. Validate Form
+    // Validate Form
     if (!_formKey.currentState!.validate()) return;
 
-    // B. Start Loading
+    // Start Loading
     setState(() => _isLoading = true);
 
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
     try {
-      // C. CALL SUPABASE
+      // CALL SUPABASE
       final AuthResponse res = await Supabase.instance.client.auth.signUp(
         email: email,
         password: password,
       );
 
-      // D. Handle Success
+      // Handle Success
       if (mounted) {
-        // CASE 1: Email Confirmation is ON (Standard)
+        // Email Confirmation is ON (Standard) - CURRENLY DISABLED IN SUPABASE FOR EASIER USE
         if (res.session == null) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -52,7 +52,7 @@ class _SignupScreenState extends State<SignupScreen> {
           // Optionally navigate to a "Check Email" screen or back to Login
           Navigator.pop(context);
         }
-        // CASE 2: Email Confirmation is OFF (Auto-Login)
+        // Email Confirmation is OFF (Auto-Login)
         else {
           // If email confirmation is disabled in Supabase, they are logged in immediately
           ScaffoldMessenger.of(context).showSnackBar(
@@ -72,14 +72,14 @@ class _SignupScreenState extends State<SignupScreen> {
         }
       }
     } on AuthException catch (e) {
-      // E. Handle Supabase Errors (e.g. User already exists)
+      // Handle Supabase Errors (e.g. User already exists)
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.message), backgroundColor: Colors.redAccent),
         );
       }
     } catch (e) {
-      // F. Handle Generic Errors
+      // Handle Generic Errors
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -89,7 +89,7 @@ class _SignupScreenState extends State<SignupScreen> {
         );
       }
     } finally {
-      // G. Stop Loading
+      // Stop Loading
       if (mounted) setState(() => _isLoading = false);
     }
   }
@@ -133,6 +133,7 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Form(
             key: _formKey,
             child: Column(
+              // Take up only the space needed by the children
               mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 165),
@@ -186,25 +187,24 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
-                    // ERROR BORDER (Matches Enabled Border -> No Red Line)
+                    // ERROR BORDER
                     errorBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color(0xFFF6F6F6), // Same as enabled color
+                        color: Colors.redAccent,
                         width: 1.0,
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
-                    // FOCUSED ERROR BORDER (Matches Focused Border -> No Red Line)
+                    // FOCUSED ERROR BORDER
                     focusedErrorBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color(0xFFE3DAC9), // Same as focused color
+                        color: Colors.redAccent,
                         width: 2.0,
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                   ),
                 ),
-                // 24PX SPACE
                 const SizedBox(height: 24),
                 // PASSWORD FIELD
                 TextFormField(
@@ -220,8 +220,8 @@ class _SignupScreenState extends State<SignupScreen> {
                         errorText: 'Password is required.',
                       ),
                       FormBuilderValidators.minLength(
-                        6,
-                        errorText: 'Password must be 6+ characters.',
+                        8,
+                        errorText: 'Password must be 8+ characters.',
                       ),
                       FormBuilderValidators.password(),
                     ])(value);
@@ -271,18 +271,18 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
-                    // ERROR BORDER (Matches Enabled Border -> No Red Line)
+                    // ERROR BORDER
                     errorBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color(0xFFF6F6F6), // Same as enabled color
+                        color: Colors.redAccent,
                         width: 1.0,
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
-                    // FOCUSED ERROR BORDER (Matches Focused Border -> No Red Line)
+                    // FOCUSED ERROR BORDER
                     focusedErrorBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color(0xFFE3DAC9), // Same as focused color
+                        color: Colors.redAccent,
                         width: 2.0,
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
