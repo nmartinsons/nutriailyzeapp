@@ -367,16 +367,23 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
               final int age = int.tryParse(_ageController.text) ?? 0;
               final int height = int.tryParse(_heightController.text) ?? 0;
               final int weight = int.tryParse(_weightController.text) ?? 0;
-              if (age <= 0 ||
-                  height <= 0 ||
-                  weight <= 0 ||
-                  _selectedGender == null ||
+              if (age <= 0 || height <= 0 || weight <= 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      "Please enter valid numbers (greater than 0) for Age, Height, and Weight.",
+                    ),
+
+                    backgroundColor: Colors.redAccent,
+                  ),
+                );
+              } else if (_selectedGender == null ||
                   _selectedGoal == null ||
                   _selectedActivity == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text(
-                      "Please enter valid numbers (greater than 0) for Age, Height, and Weight.",
+                      "Please select gender, goal and activity level.",
                     ),
 
                     backgroundColor: Colors.redAccent,
