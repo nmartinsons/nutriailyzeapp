@@ -1,3 +1,10 @@
+# 1. Creating AI prompt
+# 2. Making HTTP request to Gemini API
+# 3. From Supabase fetch foods with NULL sub_category
+# 4. The retrieved foods are embedded into the prompt
+# 5. Then the response is parsed
+# 6. Finally, the foods are updated in Supabase with the new sub_category and is_liquid fields
+
 import os
 import json
 import time
