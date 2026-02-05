@@ -11,8 +11,7 @@ from rules_engine import (
     is_safe_to_eat
 )
 
-# FIXTURES (Reusable User Data)
-
+# FIXTURES (Reusable User Data), so there is no need to redefine this in every test
 @pytest.fixture
 def base_user():
     return UserProfile(
