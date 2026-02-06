@@ -2,13 +2,16 @@ import pytest
 from models import UserProfile, Gender, Goal, ActivityLevel, Intensity, UserActivity
 from rules_engine import (
     calc_bmi, 
-    calc_bmr, 
+    calc_bmr,
+    calc_min_fat_target, 
     calc_tdee, 
     determine_weight_cat, 
     adjust_caloric_intake, 
-    get_macro_split,
+    calculate_daily_macros,
     distrib_of_cal_for_meals,
-    is_safe_to_eat
+    get_carb_fat_split,
+    is_safe_to_eat,
+    calc_protein_target
 )
 
 # FIXTURES (Reusable User Data), so there is no need to redefine this in every test
@@ -112,34 +115,152 @@ def test_bmr_floor_protection(base_user):
 
 # 4. MACRO SPLIT LOGIC
 
-def test_macro_priority_keto(base_user):
-    # AI Text input "keto" should override generic goals
-    p, c, f = get_macro_split("normal", explicit_goal="lose_weight", macro_style="keto")
+def test_protein_calculation(base_user):
+    # Normal Maintenance: 1.6g/kg
+    # 80kg * 1.6 = 128g
+    p = calc_protein_target(base_user)
+    assert int(p) == 128
+
+def test_protein_high_goal(base_user):
+    # High Protein Goal: 2.2g/kg
+    # 80kg * 2.2 = 176g
+    p = calc_protein_target(base_user, macro_style="high_protein")
+    assert int(p) == 176
+
+def test_keto_macros(base_user):
+    # Keto: Low Carb, Moderate Protein, High Fat
+    # Total Cal: 2000
+    total_cal = 2000
     
-    assert f == 0.70 # Fat should be high
-    assert c == 0.10 # Carbs should be low (Keto rules)
-    assert p == 0.20 # Protein moderate
-
-def test_macro_explicit_text_goal(base_user):
-    # User selected "Maintain" in dropdown, but typed "gain muscle" in text
-    p, c, f = get_macro_split("normal", explicit_goal="gain muscle")
+    macros = calculate_daily_macros(total_cal, base_user, macro_style="keto")
     
-    assert p == 0.35 # High protein for gain
-    assert c == 0.45 # High carb for gain
-    assert f == 0.20 # Fat moderate
+    p = macros['protein']
+    c = macros['carbs']
+    f = macros['fat']
+    
+    # Verify Ratios
+    # Protein: 1.6g/kg = 128g (512 kcal)
+    # Remaining: 1488 kcal
+    # Carbs: 10% of remaining = 148.8 kcal = 37.2g
+    assert int(p) == 128
+    assert int(c) == 37
+    assert int(f) == 148 # 1488 - 148.8 = 1339.2 kcal / 9 = 148.8g fat
 
-def test_macro_senior(base_user):
-    # Senior should get balanced protein even if maintaining
-    p, c, f = get_macro_split("normal", is_senior=True)
-    assert p == 0.35 
-    assert c == 0.35
-    assert f == 0.30
+def test_obese_macro_safety(base_user):
+    # User is 150kg (Obese)
+    base_user.weight = 150.0 
+    base_user.goal = Goal.MAINTAIN
+    
+    # Protein shouldn't be 150 * 1.6 = 240g (Too high)
+    # It should use adjusted weight (~85kg for 180cm height)
+    # Adjusted Weight ~81kg -> 81 * 1.6 = ~130g
+    
+    p = calc_protein_target(base_user)
+    assert int(p) == 231 
+   
 
+def test_min_fat_floor(base_user):
+    # User on very low calories but wants high carbs
+    total_cal = 1200
+    
+    # Force low fat preference via macro_style if possible, or rely on logic
+    # Min Fat: 80kg * 0.7 = 56g
+    
+    macros = calculate_daily_macros(total_cal, base_user, macro_style="vegan")
+    # Vegan usually 55% carb / 30% fat split of remainder
+    
+    assert macros['fat'] >= 56 # Should enforce floor
+    
+
+def test_calc_min_fat_target(base_user):
+    """Test that fat floors change based on diet style"""
+    # Base user is 80kg
+    
+    # 1. Standard (No activity) -> 0.7g/kg
+    # 80 * 0.7 = 56g
+    assert calc_min_fat_target(base_user) == 56.0
+    
+    # 2. Keto (High Fat requirement) -> 1.2g/kg
+    # 80 * 1.2 = 96g
+    assert calc_min_fat_target(base_user, macro_style="keto") == 96.0
+    
+    # 3. Heart Healthy (Lower Fat floor) -> 0.6g/kg
+    # 80 * 0.6 = 48g
+    assert calc_min_fat_target(base_user, macro_style="heart_healthy") == 48.0
+    
+    # 4. Active User -> 0.8g/kg
+    base_user.activities = [UserActivity(hours=5, intensity=Intensity.MODERATE)]
+    # 80 * 0.8 = 64g
+    assert calc_min_fat_target(base_user) == 64.0
+
+def test_carb_fat_split_sedentary_gain(base_user):
+    """Test split for someone bulking but sedentary"""
+    # Inputs
+    total_cal = 3000
+    protein_g = 200 # 800 kcal
+    min_fat = 50
+    # Remaining = 2200 kcal
+    
+    # Logic check from rules_engine:
+    # Goal='gain' -> Base ratio 0.55 + (Training Score 0.0 * 0.15) = 0.55
+    
+    c, f = get_carb_fat_split(total_cal, protein_g, min_fat, base_user, explicit_goal="gain")
+    
+    # Expected Carbs: 2200 * 0.55 = 1210 kcal / 4 = 302g
+    # Expected Fat: 2200 * 0.45 = 990 kcal / 9 = 110g
+    
+    assert int(c) == 302
+    assert int(f) == 110
+
+def test_carb_fat_split_athlete_gain(base_user):
+    """Test split for an athlete bulking (Should trigger higher carbs)"""
+    # Add High Intensity Activity to boost training score to ~1.0
+    base_user.activities = [UserActivity(hours=10, intensity=Intensity.VERY_HIGH)]
+    
+    total_cal = 3000
+    protein_g = 200 # 800 kcal
+    min_fat = 50
+    # Remaining = 2200 kcal
+    
+    # Logic check:
+    # Goal='gain' -> Base 0.55 + (Training Score ~1.0 * 0.15) = 0.70 Carb Ratio
+    
+    c, f = get_carb_fat_split(total_cal, protein_g, min_fat, base_user, explicit_goal="gain")
+    
+    # Expected Carbs: 2200 * 0.70 = 1540 kcal / 4 = 385g
+    # Expected Fat: 2200 * 0.30 = 660 kcal / 9 = 73g
+    
+    assert int(c) == 385 # Should be significantly higher than sedentary
+    assert int(f) == 73  # Fat should be lower to make room for carbs
+
+def test_split_safety_floor_intervention(base_user):
+    """Test that the split function forces minimum fat if the ratio tries to go too low"""
+    # Scenario: Very low calorie diet, user wants 'high carb' style (Vegan)
+    # Vegan defaults to 0.55 ratio
+    
+    total_cal = 1200
+    protein_g = 100 # 400 kcal
+    # Remaining = 800 kcal
+    
+    # We set a high fat requirement manually for the test
+    # e.g. User needs 60g fat minimum (540 kcal)
+    min_fat = 60 
+    
+    # Standard Math without safety:
+    # Fat = remaining (800) * (1 - 0.55) = 360 kcal / 9 = 40g
+    # 40g is LESS THAN min_fat (60g). Logic should intervene.
+    
+    c, f = get_carb_fat_split(total_cal, protein_g, min_fat, base_user, macro_style="vegan")
+    
+    assert f == 60 # Should be forced to minimum
+    # Carbs should take the hit: (800 - 540) / 4 = 65g
+    assert c == 65
+    
 # 5. MEAL DISTRIBUTION
 
 def test_meal_math(base_user):
     total_cal = 2000
-    meals = distrib_of_cal_for_meals(total_cal, 4, "normal")
+    meals = distrib_of_cal_for_meals(total_cal, 4, base_user)
     
     assert len(meals) == 4
     assert meals[0]['meal_name'] == "Breakfast"

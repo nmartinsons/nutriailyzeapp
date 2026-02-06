@@ -113,6 +113,13 @@ def adjust_caloric_intake(tdee: float, user: UserProfile, bmr: float, explicit_g
     raw_goal = explicit_goal if explicit_goal else user.goal.value
     raw_goal = str(raw_goal).lower()
     
+    if raw_goal in lose_keywords:
+        target_multiplier = 0.85  # 15% Deficit
+    elif raw_goal in gain_keywords:
+        target_multiplier = 1.10  # 10% Surplus
+    else:
+        target_multiplier = 1.00  # Maintain
+    
     # APPLY MEDICAL SAFETY OVERRIDES
     # SCENARIO: UNDERWEIGHT (BMI < 18.5)
     # Medical Rule: Never allow a deficit. Ideally, force a surplus.
@@ -150,73 +157,243 @@ def adjust_caloric_intake(tdee: float, user: UserProfile, bmr: float, explicit_g
 def is_senior(age: int) -> bool:
     return age >= 60
 
-# Emphasizes must be placed on the quality over rigid percentages.
-def get_macro_split(weight_category: str, explicit_goal: str = None, is_senior: bool = False, macro_style: str = None):
-        # Metabolic reset / insulin resistance focus
-        # Lower carb, moderate protein, higher healthy fat
-        # Split: 40% Protein, 25% Carbs, 35% Fat
-        # Emphasizing protein since it boosts metabolism, makes person feel fuller, preserves muscle mass, and increase calorie burn
-        # Higher healthy fat amount replaces carbs.
-        # Higher healthy fat increase satiety, stabilize blood sugar to prevent fat storage, boost metabolism, and provide essential 
-        # building blocks for cells and hormones, helping reverse fat-storing cycles caused by sugar/carb-heavy diets, all leading to 
-        # reduced hunger, cravings, and ultimately, becoming lean
-        # When sugars and carbs are reduced and healthy fats increased, body shifts from storing fat to burning it for energy. 
-     
-    # 1. AI / DIET OVERRIDES
-    # These come from explicit user text input indicating a specific diet style.
-    # However, system still respects conflicting health rules.
-    # Protein/Carb/Fat ratios for specific diets
-    if macro_style == "keto":
-        return (0.20, 0.10, 0.70) # High Fat, very low carb
-    if macro_style == "low_carb":
-        return (0.35, 0.20, 0.45) # Controlled carbs, higher protein/fat
-    if macro_style == "diabetic_friendly":
-        return (0.40, 0.25, 0.35) # Balanced to control blood sugar
-    if macro_style == "high_protein":
-        return (0.35, 0.40, 0.25)
-    if macro_style == "heart_healthy":
-        return (0.30, 0.45, 0.25) # Moderate everything, lower fat
-    if macro_style == "vegan" or macro_style == "vegetarian":
-        return (0.25, 0.40, 0.35) # Plants are usually higher carb 
-      
-    goal = str(explicit_goal).lower() if explicit_goal else ""
-    # EXPLICIT TEXT GOALS
-    if goal in gain_keywords:
-        return (0.35, 0.45, 0.20) # High Carb/Protein for lifting
-    if goal in lose_keywords:
-        return (0.35, 0.25, 0.40) # High Protein/Fat for satiety
-    if explicit_goal == "maintain":
-        return (0.35, 0.35, 0.30) # High Protein/Fat for satiety
+def _get_calculation_weight(user: UserProfile) -> float:
+    """
+    Determines the weight used for macro calculations.
+    For Obese individuals (BMI > 30), protein/fat needs should be based on 
+    Lean Body Mass (estimated via 'Target BMI 25' weight) rather than total weight.
+    This prevents prescribing 300g Protein to a 150kg person.
+    """
+    bmi = calc_bmi(user)
+    if bmi > 30:
+        # Calculate weight if BMI was 25 (Upper end of normal)
+        height_m = user.height / 100
+        adjusted_weight = 25 * (height_m ** 2)
+        # Use the average of actual and adjusted to be safe/satiating
+        return (user.weight + adjusted_weight) / 2
+    return user.weight
 
-    # Older adults need more protein to maintain muscle mass (Sarcopenia) even if they are just "maintaining" weight.
-    if is_senior:
-        # Boost Protein to 35%, reduce Carbs slightly
-        return (0.35, 0.35, 0.30) 
+def calc_training_intensity_score(user: UserProfile) -> float:
+    if not user.activities: return 0.0
+    #  A Normalized Ratio (0.0 to 1.0) indicating how "Glycolytic" (Carb-demanding) the training style is.
+    INTENSITY_WEIGHTS = {
+        Intensity.NONE: 0.0, 
+        Intensity.LOW: 0.2, # Mostly burns fat, needs very few extra carbs.
+        Intensity.MODERATE: 0.5, # Aerobic/cardio style, moderate carb needs.
+        Intensity.HIGH: 0.8, # Lactate Threshold. The body stops burning fat almost entirely because it's too slow. It switches to 80-90% Carbs for fuel.
+        Intensity.VERY_HIGH: 1.0 # Explosive effort. The body uses 100% Phosphocreatine and Glycogen (Carbs). Fat cannot be used as fuel at this intensity.
+    }
+    # Weighted average based on hours spent at each intensity
+    total_weighted_hours = 0.0
+    # Total hours spent training
+    total_hours = 0.0
+    # For loop through all activities
+    for act in user.activities:
+        weight = INTENSITY_WEIGHTS.get(act.intensity, 0.0)
+        total_weighted_hours += weight * act.hours
+        total_hours += act.hours
+    
+    if total_hours == 0: return 0.0
+    # Dividing the weighted total by the actual time. This gives the Average Intensity of the user's lifestyle.
+    avg_intensity = total_weighted_hours / total_hours
+    
+    # This ensures that someone who trains a lot at high intensity gets a higher score, while someone who trains less or at lower intensity gets a lower score.
+    volume_bonus = min(total_hours / 10, 0.2) 
+    
+    return min(avg_intensity + volume_bonus, 1.0)
 
-    # STANDARD BMI LOGIC (Fallback)
-    if weight_category in ["overweight", "obese"]:
-        return (0.40, 0.25, 0.35) # Insulin control
-        
+# Function for calculating daily protein target in grams, based on bodyweight and diet style constraints.
+def calc_protein_target(user: UserProfile, explicit_goal: str = None, is_senior: bool = False, macro_style: str = None) -> float:
+    # Use Adjusted Weight
+    calc_weight = _get_calculation_weight(user)
+    
+    # Get Weight Category for Metabolic Context
+    bmi = calc_bmi(user)
+    weight_category = determine_weight_cat(bmi)
+    
+    if macro_style == "keto": 
+        g_per_kg = 1.6
+    elif macro_style == "heart_healthy":
+        g_per_kg = 1.4
+    elif macro_style == "diabetic_friendly":
+        g_per_kg = 1.5
+    elif macro_style == "low_carb":
+        g_per_kg = 1.8
+    elif macro_style == "high_protein": 
+        g_per_kg = 2.2
+    elif macro_style == "vegan" or macro_style == "vegetarian": 
+        g_per_kg = 1.8
+    elif weight_category in ["overweight", "obese"]:
+        g_per_kg = 2.0
+        print(f"METABOLIC ADJUSTMENT: Lowering protein for {weight_category} category.")
     elif weight_category == "underweight":
-        return (0.25, 0.40, 0.35) 
-       
-    else: # Normal Weight (< 60 years old)
-        return (0.35, 0.35, 0.30) # Balanced
+        g_per_kg = 1.8 
+        print(f"METABOLIC ADJUSTMENT: Increasing protein for {weight_category} category.")
+    else:
+        goal = str(explicit_goal).lower() if explicit_goal else ""
+        if is_senior: 
+            g_per_kg = 1.8
+        elif goal in lose_keywords: 
+            g_per_kg = 2.0
+        elif goal in gain_keywords: 
+            g_per_kg = 2.0
+        else: 
+            g_per_kg = 1.6 
+    
+    return calc_weight * g_per_kg
 
+# Fnction for calculating minimum fat target in grams, based on bodyweight and diet style constraints.
+def calc_min_fat_target(user: UserProfile, macro_style: str = None) -> float:
+    """
+    Calculate MINIMUM fat target in GRAMS based on bodyweight.
+    Adjusted for diet style constraints.
+    """
+    # Uses Adjusted Weight (same as protein function)
+    calc_weight = _get_calculation_weight(user)
+    
+    # Get Weight Category for Metabolic Context
+    bmi = calc_bmi(user)
+    weight_category = determine_weight_cat(bmi)
+    
+    # 1. DIET STYLE OVERRIDES
+    if macro_style == "keto": 
+        min_g_per_kg = 1.2  # Keto requires high fat for energy
+    elif macro_style == "low_carb":
+        min_g_per_kg = 1.0  # Higher fat needed to replace carb energy
+    elif macro_style == "diabetic_friendly":
+        min_g_per_kg = 0.9  # Moderate fat helps stabilize blood sugar
+    elif macro_style == "vegan" or macro_style == "vegetarian":
+        min_g_per_kg = 0.9  # Plant-based diets need healthy fats for satiety
+    elif macro_style == "heart_healthy": 
+        min_g_per_kg = 0.6  # Lower floor, prioritizes unsaturated fats later
+    elif macro_style == "high_protein":
+        min_g_per_kg = 0.7  # Keep fat floor low to save calories for protein
+    elif weight_category in ["overweight", "obese"]:
+        min_g_per_kg = 0.75
+        print(f"METABOLIC ADJUSTMENT: Lowering fat for {weight_category} category.")
+    elif weight_category == "underweight":
+        min_g_per_kg = 0.9 
+        print(f"METABOLIC ADJUSTMENT: Increasing fat for {weight_category} category.")
+    
+    # 2. ACTIVITY FALLBACK
+    else:
+        # Active people need slightly more fat for hormone regulation/recovery
+        if user.activities and len(user.activities) > 0: 
+            min_g_per_kg = 0.8
+        else: 
+            min_g_per_kg = 0.7
+    
+    return calc_weight * min_g_per_kg
+
+
+def get_carb_fat_split(total_calories: int, protein_grams: float, min_fat_grams: float,
+                       user: UserProfile, explicit_goal: str = None, macro_style: str = None) -> tuple:
+    
+    # First, we calculate how many calories are taken up by protein. This is important because protein has a fixed calorie per gram (4 calories/gram), and we need to know how many calories are left for carbs and fat after accounting for protein.
+    protein_calories = protein_grams * 4
+    remaining_calories = total_calories - protein_calories
+    
+    # SAFTEY CHECK: If remaining calories are already negative or zero. If so, we can't allocate anything to carbs or fat, and we should return 0 for carbs and the minimum fat grams (which will be converted to calories later). 
+    # This is a safety check to ensure we don't end up with negative calories for carbs/fat.
+    if remaining_calories <= 0: 
+        return (0.0, min_fat_grams)
+    
+    # The training intensity score is a value between 0.0 and 1.0 that indicates how demanding the user's training style is in terms of carbohydrate needs. A higher score means the user does more high-intensity training, which relies more on carbohydrates for fuel, while a lower score indicates a more sedentary lifestyle or low-intensity training, which relies more on fat for fuel. 
+    # This score will be used to dynamically adjust the carb/fat split based on the user's actual activity patterns, rather than just their stated goal or diet style.
+    training_score = calc_training_intensity_score(user)
+    goal = str(explicit_goal).lower() if explicit_goal else ""
+    
+    # Get Weight Category for Metabolic Context
+    bmi = calc_bmi(user)
+    weight_category = determine_weight_cat(bmi)
+    
+    # Determines Carb Ratio of REMAINING calories
+    if macro_style == "keto": 
+        # KETO EXCEPTION: Do NOT scale with activity. 
+        # Ketosis requires low carbs regardless of how much you run.
+        # We rely on FAT to fuel the activity here.
+        carb_ratio = 0.10 # 10% of remainder
+    elif macro_style == "low_carb": 
+        carb_ratio = 0.25 + (training_score * 0.10)
+    elif macro_style == "diabetic_friendly": 
+        carb_ratio = 0.30 + (training_score * 0.10)
+    elif macro_style == "heart_healthy":
+        carb_ratio = 0.50 + (training_score * 0.15)
+    elif macro_style == "high_protein":
+        carb_ratio = 0.40 + (training_score * 0.15)
+    elif macro_style == "vegan" or macro_style == "vegetarian": 
+        carb_ratio = 0.55 + (training_score * 0.15)
+    elif weight_category in ["overweight", "obese"]:
+        # Insulin Control Logic: Lower baseline carbs, rely more on fats/protein.
+        # Base 30% carbs + up to 15% for training. 
+        # (Max carbs ~45% of remainder, preventing huge insulin spikes)
+        carb_ratio = 0.30 + (training_score * 0.15)
+        print(f"METABOLIC ADJUSTMENT: Lowering carbs for {weight_category} category.")
+    elif weight_category == "underweight":
+        # Restoration Logic: Higher baseline carbs for easy energy.
+        # Base 50% carbs + training bonus.
+        carb_ratio = 0.50 + (training_score * 0.10)
+        print(f"METABOLIC ADJUSTMENT: Increasing carbs for {weight_category} category.")
+    else:
+        # Dynamic based on activity
+        if goal in gain_keywords:
+            carb_ratio = 0.55 + (training_score * 0.15) # Up to 70% of remainder
+        elif goal in lose_keywords:
+            carb_ratio = 0.30 + (training_score * 0.10)
+        else:
+            carb_ratio = 0.45 + (training_score * 0.10)
+            
+    # Calculating calories for carbs and fat based on the remaining calories after protein, and the dynamically determined carb ratio. 
+    # The rest of the remaining calories after allocating for carbs will go to fat.
+    carb_calories = remaining_calories * carb_ratio
+    fat_calories = remaining_calories - carb_calories
+    
+    # We convert those calorie amounts into grams (4 calories per gram of carbs, 9 calories per gram of fat).
+    carb_grams = carb_calories / 4
+    fat_grams = fat_calories / 9
+    
+    # Fat Safety Floor
+    # This ensures that we never go below the minimum fat target, which is important for hormone production, nutrient absorption, and overall health. 
+    # If the calculated fat grams are below the minimum, we set fat grams to the minimum and recalculate carb grams based on the new fat calories.
+    if fat_grams < min_fat_grams:
+        fat_grams = min_fat_grams
+        fat_calories = fat_grams * 9
+        carb_calories = remaining_calories - fat_calories
+        # If carb calories go negative due to the fat floor, we set carbs to 0 to avoid negative macros.
+        carb_grams = max(carb_calories / 4, 0)
+        
+    return (carb_grams, fat_grams)
+
+def calculate_daily_macros(total_calories: int, user: UserProfile, explicit_goal: str = None, 
+                          is_senior: bool = False, macro_style: str = None) -> dict:
+    
+    protein_grams = calc_protein_target(user, explicit_goal, is_senior, macro_style)
+    min_fat_grams = calc_min_fat_target(user, macro_style)
+    
+    carb_grams, fat_grams = get_carb_fat_split(
+        total_calories, protein_grams, min_fat_grams,
+        user, explicit_goal, macro_style
+    )
+    
+    return {
+        "protein": int(protein_grams),
+        "carbs": int(carb_grams),
+        "fat": int(fat_grams)
+    }
+    
+    
 # Distributes calories and macros across meals based on meal count and user profile
-def distrib_of_cal_for_meals(total_calories: int, meal_count: int, weight_category: str, explicit_goal: str = None, is_senior: bool = False):
-    # 1. Getting Daily Ratios based on user profile and explicit goal
-    p_ratio, c_ratio, f_ratio = get_macro_split(weight_category, explicit_goal, is_senior)
+def distrib_of_cal_for_meals(total_calories: int, meal_count: int, user: UserProfile, explicit_goal: str = None, is_senior: bool = False, macro_style: str = None) -> list:
 
-    # 2. Calculating Daily Gram Totals. This translates the abstract calorie goal into concrete macro gram targets for the day, which are essential for KNN meal selection.
-    # 1g Protein = 4 Calories
-    # 1g Carbs = 4 Calories
-    # 1g Fat = 9 Calories
-    daily_protein = (total_calories * p_ratio) / 4
-    daily_carbs   = (total_calories * c_ratio) / 4
-    daily_fat     = (total_calories * f_ratio) / 9
+    # 1. Get Daily Totals (Grams)
+    daily_macros = calculate_daily_macros(
+        total_calories, user, explicit_goal, is_senior, macro_style
+    )
+    daily_protein = daily_macros["protein"]
+    daily_carbs = daily_macros["carbs"]
+    daily_fat = daily_macros["fat"]
 
-    # 3. Defining Time Ratios
+    # 2. Defining Time Ratios
     time_ratios = {
         2: [("Breakfast/Lunch", 0.55), ("Dinner", 0.45)],
         3: [("Breakfast", 0.35), ("Lunch", 0.35), ("Dinner", 0.30)],
