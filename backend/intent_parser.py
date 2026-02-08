@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-
 class IntentParser:
     def parse(self, text_input: str):
         if not text_input or len(text_input.strip()) < 3:
@@ -37,39 +36,37 @@ FIELDS TO EXTRACT:
 2. goal_override (ENUM or null):
    ["lose", "maintain", "gain"]
 
-3. avoid_medical (ARRAY of strings):
-   Foods to avoid due to medical conditions.
+3. avoid_keywords (ARRAY of strings):
+   Foods to avoid due to medical conditions OR explicit dislikes.
+   Combine specific ingredients and broad categories.
    Examples:
-   - diabetes → sugar, syrup, juice, white bread
-   - hypertension → salt, sodium, bacon, soy sauce
-   - upset stomach → spicy, fried, fatty, raw
-   - lactose intolerance → milk, cheese, cream
-   - vegetarian/vegan → meat, fish, poultry, eggs, dairy
-   - gluten intolerance/celiac → wheat, barley, rye, bread, pasta, baked goods
-   - seafood allergy → fish, shellfish, shrimp, crab
-   - nut allergy → peanuts, almonds, cashews, walnuts
-   - heart disease → saturated fat, trans fat, fried foods, processed meats, high-cholesterol foods
+   - "I have diabetes" → ["sugar", "syrup", "juice", "white bread", "white rice", "jam", "honey", "dried fruit"]
+   - "I hate broccoli" → ["broccoli"]
+   - "No nuts" → ["nuts", "peanut", "almond", "walnut"]
+   - "Gluten free" → ["wheat", "barley", "rye", "bread", "pasta"]
 
-4. avoid_preference (ARRAY of strings):
-   Explicit dislikes stated by the user.
-   Example: "no fish" → ["fish", "seafood"]
+4. include_keywords (ARRAY of strings):
+   Foods the user EXPLICITLY asks for.
+   Example: "I really want some chicken today" → ["chicken"]
+   Example: "Use up my eggs" → ["egg"]
 
-5. include_keywords (ARRAY of strings):
-   Foods the user explicitly wants or has.
-   Example: "I have chicken" → ["chicken"]
+5. focus_ingredients (ARRAY of strings):
+   List 5-15 specific, high-density ingredients that are BEST for the user's specific request or condition.
+   Think: "What should this person eat to succeed?"
+   - If a medical condition/diet is given, list foods for that diet.
+   - If "Diabetes": ["oats", "barley", "lentils", "beans", "salmon", "chicken", "broccoli", "spinach", "berries", "avocado", "yogurt"]
+   - If "Keto": ["avocado", "pork", "beef", "egg", "cheese", "salmon", "olive oil", "butter"]
+   - If "High Protein": ["chicken breast", "tuna", "turkey", "cottage cheese", "egg white", "lean beef"]
+   - If "Mediterranean": ["olive oil", "fish", "tomato", "cucumber", "feta", "chickpeas"]
 
 6. preferred_style (ENUM or null):
    ["simple", "quick", "spicy", "comfort", "cold", "raw"]
+   - "I want something light" -> "cold" (Salads/Yogurt) or "simple"
+   - "I want something heavy/hearty" -> "comfort" (Stews/Porridge)
 
-7. caloric_shift (ENUM or null):
-   ["light", "heavy"]
-
-8. ambiguities (ARRAY of strings):
-   Conflicting or unclear signals in the text.
-   Example: "keto conflicts with pasta request"
 
 OUTPUT:
-Return ONLY valid JSON. No explanations.
+Return ONLY valid JSON.
 """
 
         payload = {
@@ -80,22 +77,20 @@ Return ONLY valid JSON. No explanations.
                     "type": "OBJECT",
                     "properties": {
                         "macro_style": {
-                            "type": ["STRING", "NULL"],
+                            "type": "STRING",
                             "enum": [
                                 "balanced", "low_carb", "keto", "high_protein",
                                 "vegan", "vegetarian",
-                                "diabetic_friendly", "heart_healthy", None
-                            ]
+                                "diabetic_friendly", "heart_healthy"
+                            ],
+                            "nullable": True
                         },
                         "goal_override": {
-                            "type": ["STRING", "NULL"],
-                            "enum": ["lose", "maintain", "gain", None]
+                            "type": "STRING",
+                            "enum": ["lose", "maintain", "gain"],
+                            "nullable": True
                         },
-                        "avoid_medical": {
-                            "type": "ARRAY",
-                            "items": {"type": "STRING"}
-                        },
-                        "avoid_preference": {
+                        "avoid_keywords": {
                             "type": "ARRAY",
                             "items": {"type": "STRING"}
                         },
@@ -103,19 +98,17 @@ Return ONLY valid JSON. No explanations.
                             "type": "ARRAY",
                             "items": {"type": "STRING"}
                         },
-                        "preferred_style": {
-                            "type": ["STRING", "NULL"],
-                            "enum": ["simple", "quick", "spicy", "comfort", "cold", "raw", None]
-                        },
-                        "caloric_shift": {
-                            "type": ["STRING", "NULL"],
-                            "enum": ["light", "heavy", None]
-                        },
-                        "ambiguities": {
+                        "focus_ingredients": {
                             "type": "ARRAY",
                             "items": {"type": "STRING"}
-                        }
-                    }
+                        },
+                        "preferred_style": {
+                            "type": "STRING",
+                            "enum": ["simple", "quick", "spicy", "comfort", "cold", "raw"],
+                            "nullable": True
+                        },
+                    },
+                    "required": ["avoid_keywords", "include_keywords", "focus_ingredients"]
                 }
             }
         }
