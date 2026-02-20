@@ -37,14 +37,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final user = Supabase.instance.client.auth.currentUser;
 
     if (user != null) {
-      // GET IDENTITY (From Auth Metadata)
+      // Get identity (From Auth Metadata)
       final metaName = user.userMetadata?['display_name'];
       final emailName = (user.email ?? "").split('@')[0];
       final nameToDisplay = (metaName != null && metaName.toString().isNotEmpty)
           ? metaName.toString()
           : emailName;
 
-      // GET STATS (From Database 'profiles' table)
+      // Get stats (From Database 'profiles' table)
       // .maybeSingle() is used because a new user might not have a profile row yet.
       // If no row exists, it returns null instead of crashing.
       final profileData = await Supabase.instance.client
@@ -100,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             onPressed: () async {
-              // WAITS FOR USER TO RETURN FROM SETTINGS
+              // Waits for user to return from Settings before refreshing data. This is important because they might have updated their profile info there, and we want to show the latest data when they come back.
               // Using 'await' pauses this function until Settings is popped
               await Navigator.push(
                 context,
@@ -112,14 +112,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
             icon: const Icon(CupertinoIcons.gear, size: 24),
             style: ButtonStyle(
+              // Transparent background and custom press effect for better UX. The icon color changes to a lighter shade when pressed, providing visual feedback.
               overlayColor: WidgetStateProperty.all(Colors.transparent),
+              // Color depends on the state
               foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
                 if (states.contains(WidgetState.pressed)) {
                   return const Color(0xFFE3DAC9);
                 }
                 return const Color(0xFFF6F6F6);
               }),
-              padding: WidgetStateProperty.all(const EdgeInsets.all(8)),
+              padding: WidgetStateProperty.all(
+                const EdgeInsets.all(8),
+              ), // makes gear button easier to tap
             ),
           ),
           const SizedBox(width: 15),
@@ -135,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
 
-      // ROOT STRUCTURE
+      // Root Structure: Column with Expanded for main content and a fixed footer. This allows the main content to scroll if needed while keeping the footer visible at the bottom.
       // Using SafeArea, which adds auto padding, so UI does not get hidden by other items
       body: SafeArea(
         child: Column(
@@ -361,7 +365,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-// CUSTOM ICON CLASS FOR PRESS EFFECT
+// Custom icon class for press effect
 class ClickableFooterIcon extends StatefulWidget {
   // inputs
   final String assetPath;
