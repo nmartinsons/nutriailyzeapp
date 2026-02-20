@@ -2,7 +2,6 @@ import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 from rules_engine import is_safe_to_eat
 
-
 class KNN:
     # Constructor. Constructor is called when an instance of the class is created.
     # Why constructor is used? It is used because it initializes the object's attributes and sets up the initial state of the object.
