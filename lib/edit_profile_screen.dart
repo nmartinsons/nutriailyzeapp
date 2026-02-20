@@ -32,7 +32,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.dispose();
   }
 
-  // FETCHES USER EMAIL AND NAME
+  // Fetches user email and display name from Supabase Auth and TABLE
   Future<void> _loadUserIdentity() async {
     final user = Supabase
         .instance
@@ -41,7 +41,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         .currentUser; // Reads the current authenticated user
 
     if (user != null) {
-      // Trying to fetch from TABLE first
+      // Trying to fetch from table first
       final data = await Supabase.instance.client
           .from('profiles')
           .select()
@@ -63,16 +63,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  // PHOTO UPLOAD LOGIC
+  // Photo upload logic
   Future<void> _uploadPhoto() async {
     final ImagePicker picker = ImagePicker();
-    // Picks Image first
-    // Allows selecting images from Allows selecting images from gallery and camera
+    // Picks image first
+    // Allows selecting images from gallery and camera
     final XFile? image = await picker.pickImage(
       source: ImageSource.gallery,
-      maxWidth: 600, // Compress it slightly
+      maxWidth: 600,
     );
-
     if (image == null) return;
 
     // Disables buttons and shows spinner in UI
@@ -112,13 +111,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         UserAttributes(data: {'avatar_url': publicUrl}),
       );
 
-      // Update the 'profiles' TABLE
+      // Update the 'profiles' table with the new avatar URL and timestamp
       await Supabase.instance.client.from('profiles').upsert({
         'id': user.id,
         'avatar_url': publicUrl,
         'updated_at': DateTime.now().toIso8601String(),
       });
 
+      // Show success message and update UI with new avatar
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -127,10 +127,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         );
       }
+      // Updates the local state to reflect the new avatar immediately
       setState(() {
         _avatarUrl = publicUrl;
       });
     } catch (e) {
+      // Handles any errors during the upload process and shows an error message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -144,24 +146,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  // SAVE DISPLAY NAME CHANGES
+  // Save display name changes to Supabase auth and table
   Future<void> _updateIdentity() async {
-    // SANITIZE AND VALIDATE
+    // Santizing and validating the display name input before sending to Supabase
     final cleanName = _nameController.text.trim();
 
+    // Cannot be empty after trimming whitespace
     if (cleanName.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Display Name cannot be empty."),
-          backgroundColor: Colors.redAccent, // Red for error
+          backgroundColor: Colors.redAccent,
         ),
       );
       return; // STOP execution here. Do not send to Supabase.
     }
 
-    // PROCEED WITH SAVE
+    // Indicates loading state in UI (disables buttons and shows spinner)
     setState(() => _isLoading = true);
 
+    // Try updating both Supabase Auth Metadata and the 'profiles' table. Shows success or error messages accordingly.
+    //Finally, resets loading state.
     try {
       final userId = Supabase.instance.client.auth.currentUser!.id;
       // Update Supabase User Metadata
@@ -173,12 +178,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       );
 
+      // Upsert into 'profiles' table (Creates new row if it doesn't exist, or updates existing row)
       await Supabase.instance.client.from('profiles').upsert({
         'id': userId,
         'display_name': cleanName,
         'updated_at': DateTime.now().toIso8601String(),
       });
-
+      // Shows success message and navigates back to the previous screen (e.g. Profile Screen) to reflect changes
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -188,7 +194,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         );
         Navigator.pop(context);
       }
-    } catch (e) {
+    }
+    // Catches any errors during the update process and shows an error message without navigating away, allowing the user to try again.
+    catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -202,6 +210,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  // The main build method that constructs the UI of the Edit Profile screen, including the AppBar, profile photo section, display name field, and email field.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -226,9 +235,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           TextButton(
             onPressed: _updateIdentity,
             style: ButtonStyle(
-              overlayColor: WidgetStateProperty.all(
-                Colors.transparent,
-              ), // no ripple effect for all states (pressed, hovered, focused)
+              overlayColor: WidgetStateProperty.all(Colors.transparent),
             ),
 
             child: Text(
@@ -254,7 +261,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         padding: const EdgeInsets.all(30.0),
         child: Column(
           children: [
-            // PHOTO CHANGE
+            // Photo change section with loading state and error handling
             Center(
               child: GestureDetector(
                 onTap: _uploadPhoto,
@@ -265,7 +272,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       backgroundColor: Color(0xFFEEEEEE),
                       // If URL exists, show image. Else show Person Icon
                       backgroundImage: _avatarUrl != null
-                          ? NetworkImage(_avatarUrl!)
+                          ? ResizeImage(
+                              NetworkImage(_avatarUrl!),
+                              width:
+                                  330, // Matches the display size mentioned in the warning
+                              height: 330,
+                            )
                           : null,
                       child: _avatarUrl == null
                           ? const Icon(
@@ -304,7 +316,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             const SizedBox(height: 40),
 
-            // DISPLAY NAME FIELD
+            // Display Name Field
             _buildLabel("Display Name"),
             const SizedBox(height: 8),
             TextField(
@@ -335,7 +347,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             const SizedBox(height: 20),
 
-            // EMAIL FIELD (READ ONLY)
+            // Email field (read-only with lock icon)
             _buildLabel("Email"),
             const SizedBox(height: 8),
             Container(
