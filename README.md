@@ -8,7 +8,7 @@ Nutriailyze is a Flutter + FastAPI meal planning system.
 ## Demo Videos
 
 - **Full app walkthrough (YouTube):**
-  [![Watch on YouTube](https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=0jmcyB91FFU)
+  [![Watch on YouTube](<(https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg)>)](https://www.youtube.com/watch?v=0jmcyB91FFU)
 
 ---
 
