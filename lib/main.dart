@@ -1,139 +1,210 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'package:flutter_nutriailyze_app/login_screen.dart';
+import 'package:flutter_nutriailyze_app/signup_screen.dart';
+import 'package:flutter_nutriailyze_app/home_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-// import 'package:firebase_ai/firebase_ai.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // Load environment variables from the .env file
+  await dotenv.load(fileName: ".env");
+  final url = dotenv.env['SUPABASE_URL'];
+  final key = dotenv.env['SUPABASE_KEY'];
 
-  await Supabase.initialize(
-    url: 'https://zsqswroaevuxqdamdykl.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzcXN3cm9hZXZ1eHFkYW1keWtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwNzYyMjUsImV4cCI6MjA3NDY1MjIyNX0.yMOUsRZhffVqBDPJmi_yX9hJ1UjWQDdL6jNowYKPVqI',
-  );
+  // Initialize Supabase with the URL and anon key from environment variables
+  await Supabase.initialize(url: url ?? '', anonKey: key ?? '');
 
-  runApp(MyApp());
+  // Now that Supabase is initialized, we can run the app
+  runApp(const MyApp());
 }
 
-// Get a reference your Supabase client
+// Create a global Supabase client instance for easy access throughout the app
 final supabase = Supabase.instance.client;
 
+// The main app widget that sets up the MaterialApp and routes
 class MyApp extends StatelessWidget {
+  // const MyApp({super.key}) is a constructor for the MyApp class.
+  //The 'const' keyword indicates that this constructor can be used to create compile-time constant instances of MyApp.
+  //The 'super.key' part is passing the key parameter to the superclass (StatelessWidget) constructor, which is a common practice in Flutter to allow for widget identification and optimization.
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  // The build method is responsible for describing how to display the widget in terms of other, lower-level widgets. In this case, it returns a MaterialApp widget that sets up the overall theme and routing for the app.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false, // Removes the red "DEBUG" banner
+      title:
+          'Nutriailyze', // Sets the title of the app, which can be used by the operating system to identify the app
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        textTheme:
+            GoogleFonts.ptMonoTextTheme(), // Sets the font for the whole app
+        scaffoldBackgroundColor: const Color(
+          0xFF333333,
+        ), // Sets the background to Dark Grey
+        useMaterial3: true, // Uses the latest Android design style
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home:
+          const AuthGate(), // The first screen isn't Home, it's the "Gatekeeper" that checks if the user is logged in or not.
+      routes: {'/login': (context) => const LoginOrSignupScreen()},
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+// Class for the authentication gate that checks if the user is logged in or not and routes them accordingly
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+    // StreamBuilder listens to the authentication state changes from Supabase. Whenever the auth state changes (like logging in or out), it rebuilds the UI accordingly.
+    return StreamBuilder<AuthState>(
+      stream: supabase.auth.onAuthStateChange, // Listens to auth state changes
+      // The builder function is called whenever the stream emits a new value (like when the user logs in or out). It receives the current BuildContext and an AsyncSnapshot of the AuthState.
+      builder: (context, snapshot) {
+        // if statement checks if the connection state of the snapshot is still waiting, which means it's still checking the authentication status. If it is waiting, it shows a loading indicator (a circular progress bar) to indicate that the app is processing.
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            backgroundColor: Color(0xFF333333),
+            body: Center(
+              child: CircularProgressIndicator(color: Color(0xFFE3DAC9)),
             ),
-          ],
+          );
+        }
+        // This line extracts the current session from the snapshot data. The session contains information about the user's authentication status, such as whether they are logged in or not. If the session is not null, it means the user is logged in; otherwise, they are not.
+        final session = snapshot.data?.session;
+
+        // Handimg the case when the user is logged in or not. If the session is not null, it means the user is logged in, and we return the HomeScreen widget. If the session is null, it means the user is not logged in, and we return the LoginOrSignupScreen widget, which prompts the user to either log in or sign up.
+        if (session != null) {
+          // User is logged in
+          return const HomeScreen();
+        } else {
+          // User is not logged in
+          return const LoginOrSignupScreen();
+        }
+      },
+    );
+  }
+}
+
+// This is the screen that shows when the user is not logged in, prompting them to either log in or sign up.
+class LoginOrSignupScreen extends StatelessWidget {
+  const LoginOrSignupScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF333333),
+      body: Column(
+        children: [
+          // Expanded helps to divide the screen into flexible parts. The first Expanded takes up more space (flex: 6) and contains the welcome text, while the second Expanded (flex: 5) contains the login and signup buttons.
+          Expanded(
+            flex: 6, // Takes up more space than the bottom container
+            child: SafeArea(
+              // Only apply SafeArea to the top (status bar)
+              bottom: false,
+              child: Center(
+                child: Text(
+                  "Let’s Nutriailyze...",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.ptMono(
+                    textStyle: const TextStyle(
+                      color: Color(0xFFF6F6F6),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 5, // Takes up remaining space
+            child: Container(
+              width: double
+                  .infinity, // Makes the container take the full width of the screen
+              padding: const EdgeInsets.only(
+                top: 30,
+                bottom: 20,
+              ), // Adds vertical padding to the container
+              decoration: const BoxDecoration(
+                color: Color(
+                  0xFF272727,
+                ), // Sets the background color of the container to a darker grey
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(100),
+                ), // Creates a rounded top border with a radius of 100, giving it a pill-shaped appearance at the top
+              ),
+              child: Column(
+                // This centers the buttons inside the dark grey box
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildButton(
+                    context,
+                    "Log in",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(
+                    height: 17,
+                  ), // Adds vertical spacing between the two buttons
+                  _buildButton(
+                    context,
+                    "Sign up",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignupScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // This is a helper method to build the login and signup buttons with consistent styling.
+  Widget _buildButton(
+    BuildContext context,
+    String text, {
+    required VoidCallback onPressed,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFE3DAC9),
+            foregroundColor: const Color(0xFF333333),
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            textStyle: GoogleFonts.ptMono(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          onPressed: onPressed,
+          child: Text(text),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
