@@ -4,12 +4,18 @@ import 'package:flutter_nutriailyze_app/physical_stats_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
-  // Logging out functionality
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  // This function handles the logout process, including error handling and navigation
   Future<void> _handleLogout(BuildContext context) async {
     try {
+      // Sign out the user using Supabase's auth client
       await Supabase.instance.client.auth.signOut();
       // Is this widget still in the widget tree
       if (context.mounted) {
@@ -26,6 +32,7 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
+  // The build method constructs the UI of the settings screen, including the app bar, settings options, and logout button
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,126 +52,138 @@ class SettingsScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        // PreferredSiz is used because AppBar's bottom property expects a widget that implements PreferredSizeWidget, and it allows us to define a custom height for the bottom area.
+        // In this case, we use it to add a thin divider below the AppBar.
         bottom: PreferredSize(
           // This defines the height of the bottom area (keeps it tight)
           preferredSize: const Size.fromHeight(1.0),
           child: const Divider(
             color: Color(0xFF444444),
             thickness: 0.5,
-            height: 0.5, // Removes extra vertical padding
+            height: 0.5,
           ),
         ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
 
-            // SECTION 1: ACCOUNT
-            _buildSectionHeader("Account"),
-            _buildSettingsItem(
-              context,
-              title: "Edit Profile",
-              icon: Icons.person_outline,
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const EditProfileScreen()),
-                );
-              },
-            ),
-            _buildDivider(),
-            _buildSettingsItem(
-              context,
-              title: "Physical Stats",
-              icon: Icons.query_stats_outlined,
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => PhysicalStatsScreen()),
-                );
-              },
-            ),
-
-            const SizedBox(height: 30),
-
-            // SECTION 2: APP
-            _buildSectionHeader("App"),
-            _buildSettingsItem(
-              context,
-              title: "Notifications",
-              icon: Icons.notifications_none,
-              onTap: () {
-                // FOR NOW DO NOT NAVIGATE ANYWHERE, THIS WILL BE IMPLEMENTED LATER
-              },
-            ),
-            _buildDivider(),
-            _buildSettingsItem(
-              context,
-              title: "Privacy Policy",
-              icon: Icons.lock_outline,
-              onTap: () {
-                // FOR NOW DO NOT NAVIGATE ANYWHERE, THIS WILL BE IMPLEMENTED LATER
-              },
-            ),
-
-            const SizedBox(height: 40),
-
-            // LOG OUT BUTTON
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () => _handleLogout(context),
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.redAccent.withValues(alpha: 0.2),
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+              // SECTION 1: ACCOUNT
+              _buildSectionHeader("Account"),
+              _buildSettingsItem(
+                context,
+                title: "Edit Profile",
+                icon: Icons.person_outline,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfileScreen(),
                     ),
-                  ),
-                  child: Text(
-                    "Log Out",
-                    style: GoogleFonts.ptMono(
-                      color: Colors.redAccent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                  ).then((_) {
+                    // Reload settings state when returning if needed
+                    if (mounted) setState(() {});
+                  });
+                },
+              ),
+              _buildDivider(),
+              _buildSettingsItem(
+                context,
+                title: "Physical Stats",
+                icon: Icons.query_stats_outlined,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const PhysicalStatsScreen(),
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 30),
+
+              // SECTION 2: APP
+              _buildSectionHeader("App"),
+              _buildSettingsItem(
+                context,
+                title: "Notifications",
+                icon: Icons.notifications_none,
+                onTap: () {
+                  // FOR NOW DO NOT NAVIGATE ANYWHERE, THIS WILL BE IMPLEMENTED LATER
+                },
+              ),
+              _buildDivider(),
+              _buildSettingsItem(
+                context,
+                title: "Privacy Policy",
+                icon: Icons.lock_outline,
+                onTap: () {
+                  // FOR NOW DO NOT NAVIGATE ANYWHERE, THIS WILL BE IMPLEMENTED LATER
+                },
+              ),
+
+              const SizedBox(height: 40),
+
+              // LOG OUT BUTTON
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () => _handleLogout(context),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.redAccent.withValues(alpha: 0.2),
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      "Log Out",
+                      style: GoogleFonts.ptMono(
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 20),
-            Column(
-              children: [
-                Text(
-                  "Version 1.0.0", // App version for visual look
-                  style: GoogleFonts.ptMono(
-                    color: const Color(0xFF8E8E8E),
-                    fontSize: 12,
+              const SizedBox(height: 20),
+              Column(
+                children: [
+                  Text(
+                    "Version 1.0.0", // App version for visual look
+                    style: GoogleFonts.ptMono(
+                      color: const Color(0xFF8E8E8E),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 120),
-                // COPYRIGHT
-                Text(
-                  "©${DateTime.now().year} Nutriailyze. All Rights Reserved.",
-                  style: GoogleFonts.ptMono(
-                    color: const Color(0xFFFDFBF7),
-                    fontSize: 12,
+                  const SizedBox(height: 120),
+                  // COPYRIGHT
+                  Text(
+                    "©${DateTime.now().year} Nutriailyze. All Rights Reserved.",
+                    style: GoogleFonts.ptMono(
+                      color: const Color(0xFFFDFBF7),
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20), // Bottom padding
-          ],
+                ],
+              ),
+              const SizedBox(height: 20), // Bottom padding
+            ],
+          ),
         ),
       ),
     );
   }
 
   // HELPER WIDGETS
+  // This widget builds a section header with a specific style, used to separate different sections of the settings screen (e.g., Account, App)
   Widget _buildSectionHeader(String title) {
     return Container(
       width: double.infinity,
@@ -181,6 +200,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  // This widget builds an individual settings item, which includes an icon, title, and a trailing arrow. It also handles the onTap action for each item.
   Widget _buildSettingsItem(
     BuildContext context, {
     required String title,
@@ -212,6 +232,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  // Helper widget to build a custom divider with specific styling, used to separate individual settings items visually.
   Widget _buildDivider() {
     return const Divider(
       color: Color(0xFF444444),
