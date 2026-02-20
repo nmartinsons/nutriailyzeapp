@@ -5,7 +5,7 @@ Nutriailyze is a Flutter + FastAPI meal planning system.
 - **Frontend (Flutter):** user auth, profile/stats input, daily meal display, plan generation UI.
 - **Backend (Python/FastAPI):** nutrition rules, intent parsing, KNN meal selection, optional Gemini enrichment, and food-data tagging pipelines.
 
-## Demo Videos
+## Demo Video
 
 - **Full app walkthrough (YouTube):**
 
