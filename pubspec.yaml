@@ -43,6 +43,7 @@ dependencies:
   form_builder_validators: ^11.2.0
   flutter_dotenv: ^6.0.0
   image_picker: ^1.2.1
+  http: ^1.6.0
 
 flutter_native_splash:
   color: "#272727"
