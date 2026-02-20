@@ -136,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
 
       // ROOT STRUCTURE
-      // Using SafeArea, which add auto padding, so UI does not get hidden by othr items
+      // Using SafeArea, which adds auto padding, so UI does not get hidden by other items
       body: SafeArea(
         child: Column(
           children: [
@@ -152,11 +152,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(height: 30),
 
                       // AVATAR & NAME
+                      // CircleAvatar widget is used to display the user's profile picture in a circular frame. If the user has an avatar URL, it loads the image from the network; otherwise, it shows a default person icon.
                       CircleAvatar(
                         radius: 50,
                         backgroundColor: const Color(0xFFEEEEEE),
                         backgroundImage: avatarUrl != null
-                            ? NetworkImage(avatarUrl)
+                            ? ResizeImage(
+                                NetworkImage(avatarUrl),
+                                width: 330,
+                                height: 330,
+                              )
                             : null,
                         child: avatarUrl == null
                             ? const Icon(
@@ -223,7 +228,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                       // MEAL PLAN BUTTON
                       _buildButton(
-                        context,
                         "Meal Plan History",
                         onPressed: () {
                           Navigator.push(
@@ -297,7 +301,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // HELPER WIDGETS
-
+  // This widget builds a section header with a specific style, used to separate different sections of the profile screen - height, weight, goal.
   Widget _buildStatItem(String label, String value) {
     return Column(
       children: [
@@ -321,15 +325,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // This widget builds a vertical divider used in the stats dashboard to separate Height, Weight, and Goal visually. It is a simple container with a specified width and color.
   Widget _buildDivider() {
     return Container(height: 30, width: 1, color: const Color(0xFF444444));
   }
 
-  Widget _buildButton(
-    BuildContext context,
-    String text, {
-    required VoidCallback onPressed,
-  }) {
+  Widget _buildButton(String text, {required VoidCallback onPressed}) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
