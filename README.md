@@ -142,19 +142,6 @@ From `backend/`:
 
 ---
 
-## Platform Notes
-
-Desktop/web folders are standard Flutter targets:
-
-- Linux: [linux/CMakeLists.txt](linux/CMakeLists.txt)
-- Windows: [windows/CMakeLists.txt](windows/CMakeLists.txt)
-- iOS pods: [ios/Podfile](ios/Podfile)
-- Web entry: [web/index.html](web/index.html)
-
-Generated plugin/build files should generally not be manually edited (for example [windows/flutter/generated_plugins.cmake](windows/flutter/generated_plugins.cmake), [linux/flutter/generated_plugin_registrant.cc](linux/flutter/generated_plugin_registrant.cc)).
-
----
-
 ## Current High-Level Architecture
 
 - **Client:** Flutter UI + Supabase auth/session handling.
