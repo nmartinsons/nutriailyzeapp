@@ -13,11 +13,14 @@ class PhysicalStatsScreen extends StatefulWidget {
 }
 
 class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
-  bool _isLoading = true;
-  // Start blank
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _heightController = TextEditingController();
-  final TextEditingController _weightController = TextEditingController();
+  bool _isLoading = true; // Show loading spinner while fetching data
+  final TextEditingController _ageController =
+      TextEditingController(); // Input field for Age
+  final TextEditingController _heightController =
+      TextEditingController(); // Input field for Height
+  final TextEditingController _weightController =
+      TextEditingController(); // Input field for Weight
+  // Allergy options based on common allergens (can be expanded or modified as needed) - comes from EFSA list: https://www.efsa.europa.eu/en/safe2eat/food-allergens
   final List<String> _allergyOptions = [
     "Gluten",
     "Crustaceans",
@@ -35,12 +38,12 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
     "Molluscs",
   ];
 
-  // MAKE THESE NULLABLE (String?) so no option is pre-selected
+  // String? so no option is pre-selected (null means no selection, vs empty string which would be a valid selection but we don't have that)
   String? _selectedGender;
   String? _selectedGoal;
   String? _selectedActivity;
 
-  //  START WITH EMPTY LIST
+  // We store allergies as a list of strings (e.g. ["Gluten", "Peanuts"])
   List<String> _allergies = [];
   // Temporary variables for the dropdowns
   String? _tempHours;
@@ -54,6 +57,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
 
   Future<void> _loadStats() async {
     try {
+      // Get current user ID from Supabase Auth
       final userId = Supabase.instance.client.auth.currentUser!.id;
 
       // Fetch data from 'profiles' table
@@ -63,9 +67,10 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
           .eq('id', userId)
           .maybeSingle(); // Returns null if no row exists yet
 
+      // If data exists, populate the fields. We also check if the widget is still mounted before calling setState to avoid memory leaks or errors if the user navigated away.
       if (data != null && mounted) {
         setState(() {
-          // Fill Text Fields (Convert numbers to strings)
+          // Filling text fields (Converts numbers to strings)
           _ageController.text = data['age']?.toString() ?? '';
           _heightController.text = data['height']?.toString() ?? '';
           _weightController.text = data['weight']?.toString() ?? '';
@@ -83,7 +88,8 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
           // Fill Extra Activities (JSON handling)
           if (data['extra_activities'] != null) {
             final List<dynamic> jsonList = data['extra_activities'];
-            _extraActivities.clear();
+            _extraActivities
+                .clear(); // Clear any existing data before adding new items. This ensures that if the user saves multiple times, we don't duplicate activities in the list.
             for (var item in jsonList) {
               _extraActivities.add({
                 'hours': item['hours'].toString(),
@@ -93,8 +99,6 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
           }
         });
       }
-    } catch (e) {
-      print("Error loading stats: $e");
     } finally {
       // Stop loading spinner regardless of success/fail
       if (mounted) setState(() => _isLoading = false);
@@ -111,7 +115,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
       "desc": "Light sweating (e.g. Yoga, Pilates, Walking). Can talk easily.",
     },
     {
-      "level": "Medium",
+      "level": "Moderate",
       "desc":
           "Hard breathing (e.g. Jogging, light lifting). Can speak in short sentences.",
     },
@@ -127,6 +131,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
     },
   ];
 
+  // Goal Options
   final List<String> _goals = ["Lose Weight", "Maintain", "Gain Muscle"];
 
   // Activity Data
@@ -155,13 +160,14 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
     },
   ];
 
+  // Logic to show the hour picker
   void _showHourPicker() {
-    // Generate list: 0.5, 1, 1.5 ... 20
-    final List<String> hours = List.generate(40, (index) {
-      int val = index + 1; // Starting from 1 not 0
+    // Generate list: 0.5, 1, 1.5 ... 30
+    final List<String> hours = List.generate(60, (index) {
+      double val = (index + 1) * 0.5;
       return val % 1 == 0 ? "${val.toInt()}" : "$val";
     });
-
+    // showModalBottomSheet is a built-in Flutter function that shows a panel from the bottom. We customize it to show our hour options in a wheel format using CupertinoPicker.
     showModalBottomSheet(
       context: context,
       backgroundColor: const Color(0xFF272727),
@@ -187,7 +193,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
               // The Wheel
               Expanded(
                 child: CupertinoPicker(
-                  itemExtent: 32,
+                  itemExtent: 32, // Each item height
                   onSelectedItemChanged: (int index) {
                     setState(() => _tempHours = hours[index]);
                   },
@@ -236,6 +242,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
     });
   }
 
+  // Logic to show the intensity picker
   void _showIntensityPicker() {
     showModalBottomSheet(
       context: context,
@@ -245,7 +252,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
       ),
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,6 +281,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
               ),
               const SizedBox(height: 15),
               // Generate list of options
+              // ... is the spread operator, it takes each item from the list and adds it to the children of the column
               ..._intensityData.map((item) {
                 bool isSelected = _tempIntensity == item['level'];
                 return InkWell(
@@ -336,6 +344,8 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
     );
   }
 
+  // The main build function that renders the UI. It uses Scaffold for basic layout, AppBar for the top bar, and conditionally shows a loading spinner or the form based on _isLoading.
+  //The form includes text fields, dropdowns, and custom widgets for selecting activity hours and intensity.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -362,7 +372,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
               // Removes the Highlight effect (when holding down)
               overlayColor: Colors.transparent,
             ),
-            // Function as async
+            // Function as async because we need to await the database operation. We also added validation to ensure that the user inputs valid data before saving.
             onPressed: () async {
               final int age = int.tryParse(_ageController.text) ?? 0;
               final int height = int.tryParse(_heightController.text) ?? 0;
@@ -373,7 +383,6 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                     content: Text(
                       "Please enter valid numbers (greater than 0) for Age, Height, and Weight.",
                     ),
-
                     backgroundColor: Colors.redAccent,
                   ),
                 );
@@ -394,7 +403,8 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
               try {
                 // Perform the Save
                 final userId = Supabase.instance.client.auth.currentUser!.id;
-
+                // Updating the 'profiles' table with the new data. We use upsert to insert a new row if it doesn't exist or update the existing row if it does.
+                //The 'id' field is used as the unique identifier for the upsert operation.
                 await Supabase.instance.client.from('profiles').upsert({
                   'id': userId,
                   'age': age,
@@ -403,7 +413,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                   'gender': _selectedGender,
                   'goal': _selectedGoal,
                   // Handle nullable activity
-                  'activity_level': _selectedActivity ?? "",
+                  'activity_level': _selectedActivity,
                   'allergies': _allergies,
                   'extra_activities': _extraActivities, // The list of maps
                   'updated_at': DateTime.now().toIso8601String(),
@@ -460,7 +470,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // BIOMETRICS
+                    // Biometrics
                     _buildSectionHeader("Biometrics"),
                     const SizedBox(height: 15),
                     // Gender
@@ -500,30 +510,26 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 30),
-
-                    // GOAL
+                    // Goal
                     _buildSectionHeader("Goal"),
                     const SizedBox(height: 10),
                     _buildDropdown(
                       _selectedGoal,
                       _goals,
-                      (val) => setState(() => _selectedGoal = val!),
+                      (val) => setState(
+                        () => _selectedGoal = val!,
+                      ), // Cannot be null when user picks an option, but can be null if they haven't picked anything yet, which is fine because we validate on Save.
                     ),
-
                     const SizedBox(height: 30),
-
-                    // ACTIVITY LEVEL
+                    // Aactivity Level
                     _buildSectionHeader("Activity Level"),
                     const SizedBox(height: 10),
                     ..._activityLevels.map(
                       (l) => _buildActivityCard(l['value']!, l['desc']!),
                     ),
-
                     const SizedBox(height: 30),
-
-                    _buildSectionHeader("Exercise Habits"),
+                    _buildSectionHeader("Exercise Habits (Optional)"),
                     const SizedBox(height: 5),
                     Text(
                       "Add specific sports or extra activities.",
@@ -613,10 +619,8 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 10),
-
-                    // THE ADD BUTTON
+                    // The add button
                     InkWell(
                       onTap: _addExtraActivity,
                       borderRadius: BorderRadius.circular(8),
@@ -654,12 +658,15 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                       ),
                     ),
 
-                    // THE LIST OF ADDED ACTIVITIES
+                    // The lis of added activities. We only show this if there are activities in the list. We use asMap().entries to get both the index and the item, which allows us to implement the remove function.
+                    // ...[] spreads all children directly into the parent Column
                     if (_extraActivities.isNotEmpty) ...[
                       const SizedBox(height: 15),
                       ..._extraActivities.asMap().entries.map((entry) {
-                        int idx = entry.key;
-                        Map<String, String> item = entry.value;
+                        int idx =
+                            entry.key; // index (needed for delete function)
+                        Map<String, String> item =
+                            entry.value; // the activity map
                         return Container(
                           margin: const EdgeInsets.only(bottom: 8),
                           padding: const EdgeInsets.symmetric(
@@ -705,13 +712,13 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                         );
                       }),
                     ],
-
                     const SizedBox(height: 30),
-
-                    // ALLERGIES
-                    _buildSectionHeader("Allergies"),
+                    // Allergies
+                    _buildSectionHeader("Allergies (Optional)"),
                     const SizedBox(height: 10),
-
+                    // Theme widget is used to override the default theme for the dropdown and its children.
+                    //This allows us to customize the colors and styles of the dropdown without affecting the rest of the app.
+                    //We specifically style the dropdown.
                     Theme(
                       data: Theme.of(context).copyWith(
                         // Removes Water Ripples
@@ -731,7 +738,6 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                         ),
 
                         // Forces "DONE" button style (Beige background, Black text)
-                        // We style both TextButton and ElevatedButton to be safe
                         textButtonTheme: TextButtonThemeData(
                           style: TextButton.styleFrom(
                             backgroundColor: const Color(
@@ -771,7 +777,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                           ),
                         ),
 
-                        // CHECKBOX STYLE
+                        // Checkbox theme to style the checkboxes in the dropdown menu. We remove the border and set custom colors for checked and unchecked states.
                         checkboxTheme: CheckboxThemeData(
                           side: const BorderSide(
                             color: Colors.transparent,
@@ -790,22 +796,26 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                           ),
                         ),
 
-                        // INPUT CURSORS
+                        // Input decoration theme to style the search box in the dropdown menu. We set the background color, hint text style, border styles, and padding.
                         textSelectionTheme: const TextSelectionThemeData(
                           cursorColor: Color(0xFFE3DAC9),
                           selectionColor: Color(0xFF444444),
                         ),
                       ),
-
+                      // This is the actual dropdown widget that allows multiple selection.
+                      //We use the DropdownSearch package for this, which provides a lot of customization options and built-in search functionality.
                       child: DropdownSearch<String>.multiSelection(
                         items: (filter, loadProps) => _allergyOptions,
+                        // The list of currently selected allergies. This tells the widget which items are selected so it can display them correctly in the UI.
                         selectedItems: _allergies,
                         onChanged: (List<String> items) {
                           setState(() {
+                            // When the user selects or deselects an allergy, this callback is triggered with the updated list of selected items.
+                            //We update our _allergies state variable with this new list, which will automatically update the UI to reflect the changes.
                             _allergies = items;
                           });
                         },
-
+                        // This section defines how the dropdown field looks when it's not expanded.
                         decoratorProps: DropDownDecoratorProps(
                           decoration: InputDecoration(
                             filled: true,
@@ -828,7 +838,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                             ),
                           ),
                         ),
-
+                        // This section defines the appearance and behavior of the dropdown menu that appears when the user taps on the field.
                         popupProps: PopupPropsMultiSelection.menu(
                           showSearchBox: true,
                           menuProps: MenuProps(
@@ -867,7 +877,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                               ),
                             ),
                           ),
-
+                          // This defines how each item in the dropdown menu is built.
                           itemBuilder: (context, item, isSelected, isHovered) {
                             return Container(
                               padding: const EdgeInsets.symmetric(
@@ -902,7 +912,8 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
                             );
                           },
                         ),
-
+                        // This defines how the selected items are displayed in the field when the dropdown is not expanded.
+                        //We display them as Chips with a delete icon to remove them.
                         dropdownBuilder: (context, selectedItems) {
                           if (selectedItems.isEmpty) {
                             return const SizedBox.shrink();
@@ -951,7 +962,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
     );
   }
 
-  // HELPERS
+  // Helper widget to build section headers with consistent styling. We use uppercase text and a specific font and color to differentiate it from other text in the form.
   Widget _buildSectionHeader(String title) {
     return Text(
       title.toUpperCase(),
@@ -963,8 +974,12 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
     );
   }
 
+  // Helper widget to build the gender selection buttons.
+  // We use GestureDetector to make the entire container tappable, and we change the background color and text color based on whether it's selected or not.
   Widget _buildGenderButton(String gender) {
-    bool isSelected = _selectedGender == gender;
+    bool isSelected =
+        _selectedGender ==
+        gender; // This line works as follows: If the currently selected gender (_selectedGender) is equal to the gender represented by this button (the gender parameter), then isSelected will be true. Otherwise, it will be false. This boolean variable is then used to determine the styling of the button, such as its background color and text color, to visually indicate whether it is selected or not.
     return Expanded(
       child: GestureDetector(
         onTap: () => setState(() => _selectedGender = gender),
@@ -995,6 +1010,8 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
     );
   }
 
+  // Helper widget to build number input fields for age, height, and weight.
+  // We use TextField with specific input formatters to ensure only valid numbers are entered, and we style it to match the app's theme.
   Widget _buildNumberInput(
     String label,
     TextEditingController ctrl,
@@ -1010,7 +1027,7 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
             fontSize: 12,
           ),
         ),
-        const SizedBox(height: 5),
+        const SizedBox(height: 5), // spacing between label and field
         TextField(
           controller: ctrl,
           keyboardType: TextInputType.number,
@@ -1022,12 +1039,10 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
           cursorColor: const Color(0xFFE3DAC9),
           decoration: InputDecoration(
             hintText: "0",
-            hintStyle: GoogleFonts.ptMono(
-              color: const Color(0xFF666666),
-            ), // Dark grey hint
+            hintStyle: GoogleFonts.ptMono(color: const Color(0xFF666666)),
             filled: true,
             fillColor: const Color(0xFF272727),
-            suffixText: suffix,
+            suffixText: suffix, // yrs, cm, kg
             suffixStyle: GoogleFonts.ptMono(
               color: const Color(0xFF8E8E8E),
               fontSize: 12,
@@ -1046,10 +1061,13 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
     );
   }
 
+  // Helper widget to build dropdown menus for goal selection.
   Widget _buildDropdown(
-    String? current,
-    List<String> items,
-    ValueChanged<String?> change,
+    String? current, // Currently selected value (e.g., "Lose Weight")
+    List<String>
+    items, // Menu options (e.g., ["Lose Weight", "Maintain", "Gain Muscle"])
+    ValueChanged<String?>
+    change, // Callback function triggered when user selects an item
   ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -1064,21 +1082,26 @@ class _PhysicalStatsScreenState extends State<PhysicalStatsScreen> {
             "Select...", // Shows this when current is null
             style: GoogleFonts.ptMono(color: const Color(0xFF666666)),
           ),
-          isExpanded: true,
+          isExpanded: true, // Fills available width
           dropdownColor: const Color(0xFF272727),
           icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFFE3DAC9)),
           style: GoogleFonts.ptMono(color: const Color(0xFFF6F6F6)),
+          // Converts list items into clickable DropdownMenuItems
           items: items
               .map((e) => DropdownMenuItem(value: e, child: Text(e)))
               .toList(),
-          onChanged: change,
+          onChanged: change, // Calls the callback when user picks an option
         ),
       ),
     );
   }
 
+  // Helper widget to build activity level selection cards. Each card represents an activity level option, and when tapped, it updates the selected activity state. The card's appearance changes based on whether it's selected or not, providing visual feedback to the user.
   Widget _buildActivityCard(String title, String subtitle) {
-    bool isSelected = _selectedActivity == title;
+    bool isSelected =
+        _selectedActivity ==
+        title; // Checks if this card's title matches the currently selected activity level. If it does, isSelected will be true, which we use to change the card's styling to indicate it's selected.
+    // When the user taps on the card, we update the _selectedActivity state to this card's title, which will trigger a UI update and mark this card as selected.
     return GestureDetector(
       onTap: () => setState(() => _selectedActivity = title),
       child: Container(
