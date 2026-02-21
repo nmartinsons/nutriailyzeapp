@@ -108,10 +108,10 @@ class _HomeScreenState extends State<HomeScreen> {
         if (mounted) {
           setState(() {
             // It extracts the daily goals from the database JSON.
-            _goalCalories = (targets['calories'] ?? 0);
-            _goalProtein = (targets['protein'] ?? 0);
-            _goalCarbs = (targets['carbs'] ?? 0);
-            _goalFat = (targets['fat'] ?? 0);
+            _goalCalories = ((targets['calories'] ?? 0) as num).round();
+            _goalProtein = ((targets['protein'] ?? 0) as num).round();
+            _goalCarbs = ((targets['carbs'] ?? 0) as num).round();
+            _goalFat = ((targets['fat'] ?? 0) as num).round();
 
             // The meals list from the plan data is processed to create a structured list of meals with their nutritional information.
             //Each meal is transformed into a map that includes the meal's title, type, calories, protein, carbs, fat, and an 'isEaten' flag that indicates whether the user has marked the meal as eaten or not.
@@ -136,10 +136,10 @@ class _HomeScreenState extends State<HomeScreen> {
               // Format B: Enriched / Gemini Output
               else if (meal.containsKey('macros')) {
                 final m = meal['macros'];
-                p = (m['protein'] ?? 0);
-                c = (m['carbs'] ?? 0);
-                f = (m['fat'] ?? 0);
-                k = meal['total_calories'] ?? 0;
+                p = ((m['protein'] ?? 0) as num).round();
+                c = ((m['carbs'] ?? 0) as num).round();
+                f = ((m['fat'] ?? 0) as num).round();
+                k = ((meal['total_calories'] ?? 0) as num).round();
                 title = meal['display_name'] ?? "Meal";
                 type = meal['title'] ?? "Meal";
               }
