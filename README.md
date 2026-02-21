@@ -31,6 +31,8 @@ Nutriailyze is a Flutter + FastAPI meal planning system.
     - Input form for meal-plan generation prompts/constraints before calling backend.
   - [lib/output_screen.dart](lib/output_screen.dart)
     - Displays generated meal-plan results from backend (meals, portions, and nutrition summary).
+  - [lib/meal_plan_history_screen.dart](lib/meal_plan_history_screen.dart)
+    - Displays history of generated meal plans, starting with the latest.
 
 - Backend API: [backend/main.py](backend/main.py)
 - Domain models: [backend/models.py](backend/models.py)
