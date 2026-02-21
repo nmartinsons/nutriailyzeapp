@@ -128,7 +128,9 @@ Used by [backend/db_access.py](backend/db_access.py) and Gemini callers:
 
 From `backend/`:
 
-- Install dependencies (your preferred tool/pip env)
+- Install dependencies:
+  - `pip install -r requirements.txt`
+  - Requirements file: [backend/requirements.txt](backend/requirements.txt)
 - Start API:
   - `uvicorn main:app --reload`
 
