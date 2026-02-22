@@ -496,7 +496,11 @@ class KNN:
             return None
 
         # Setup KNN for the soup
+        # Creates a KNN model looking for up to 20 nearest neighbors
+        # Measures similarity using cosine distance (angles between vectors), not straight-line distance because nutritional data because it cares about proportions, not absolute values
+        # Algorithm='brute' = compares against all soups. It is slower but more accurate with small datasets.
         model = NearestNeighbors(n_neighbors=min(20, len(soup_df)), metric='cosine', algorithm='brute')
+        # Learning the nutritional profiles of all filtered soups
         model.fit(soup_df[self.features])
         
         # Target
@@ -508,9 +512,16 @@ class KNN:
         target_vector = pd.DataFrame([[t_p, t_c, t_f]], columns=self.features)
         
         # Find closest soups to the target macros using KNN. This returns the distances and indices of the nearest neighbors in the soup_df DataFrame.
+        # model.kneighbors(target_vector) finds the 20 soups closest to that target in "macro space"
+        # Returns:
+        # distances = how far each neighbor is (lower = better match)
+        # indices = their positions in soup_df
         distances, indices = model.kneighbors(target_vector)
         
         # Picking unique soup, sarting from the closest one (the best match)
+        # Loops through the 20 closest soups (sorted by distance, closest first)
+        # Skips any already used soups (ignore_names)
+        # Returns the first valid soup found (= best match that hasn't been used)
         for idx in indices[0]:
             # soup_df.iloc[idx] tells Pandas to go into the soup database and pull out the exact row at position idx
             # .to_dict() converts that row of data into a standard Python dictionary so the code can easily read it
