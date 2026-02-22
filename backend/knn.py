@@ -501,6 +501,7 @@ class KNN:
         # Algorithm='brute' = compares against all soups. It is slower but more accurate with small datasets.
         model = NearestNeighbors(n_neighbors=min(20, len(soup_df)), metric='cosine', algorithm='brute')
         # Learning the nutritional profiles of all filtered soups
+        # .fit() = memorizes all the macro profile
         model.fit(soup_df[self.features])
         
         # Target
@@ -516,6 +517,7 @@ class KNN:
         # Returns:
         # distances = how far each neighbor is (lower = better match)
         # indices = their positions in soup_df
+        # .kneighbors() = uses that memory to find closest matches
         distances, indices = model.kneighbors(target_vector)
         
         # Picking unique soup, sarting from the closest one (the best match)
