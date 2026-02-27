@@ -176,19 +176,19 @@ def test_calc_min_fat_target(base_user):
     """Test that fat floors change based on diet style"""
     # Base user is 80kg
     
-    # 1. Standard (No activity) -> 0.7g/kg
+    # 1. Standard (No activity) -> 0.85g/kg
     # 80 * 0.85 = 68g
     assert calc_min_fat_target(base_user) == 68.0
     
-    # 2. Keto (High Fat requirement) -> 1.2g/kg
+    # 2. Keto (High Fat requirement) -> 1.3g/kg
     # 80 * 1.3 = 104g
     assert calc_min_fat_target(base_user, macro_style="keto") == 104.0
     
-    # 3. Heart Healthy (Lower Fat floor) -> 0.6g/kg
+    # 3. Heart Healthy (Lower Fat floor) -> 0.8g/kg
     # 80 * 0.8 = 64g
     assert calc_min_fat_target(base_user, macro_style="heart_healthy") == 64.0
     
-    # 4. Active User -> 0.8g/kg
+    # 4. Active User -> 0.95g/kg
     base_user.activities = [UserActivity(hours=5, intensity=Intensity.MODERATE)]
     # 80 * 0.95 = 76g
     assert calc_min_fat_target(base_user) == 76.0
