@@ -257,31 +257,31 @@ def calc_min_fat_target(user: UserProfile, macro_style: str = None) -> float:
     
     # 1. DIET STYLE OVERRIDES
     if macro_style == "keto": 
-        min_g_per_kg = 1.2  # Keto requires high fat for energy
+        min_g_per_kg = 1.3  # Keto requires high fat for energy
     elif macro_style == "low_carb":
-        min_g_per_kg = 1.0  # Higher fat needed to replace carb energy
+        min_g_per_kg = 1.1  # Higher fat needed to replace carb energy
     elif macro_style == "diabetic_friendly":
         min_g_per_kg = 0.9  # Moderate fat helps stabilize blood sugar
     elif macro_style == "vegan" or macro_style == "vegetarian":
-        min_g_per_kg = 0.9  # Plant-based diets need healthy fats for satiety
+        min_g_per_kg = 1  # Plant-based diets need healthy fats for satiety
     elif macro_style == "heart_healthy": 
-        min_g_per_kg = 0.6  # Lower floor, prioritizes unsaturated fats later
+        min_g_per_kg = 0.8  # Lower floor, prioritizes unsaturated fats later
     elif macro_style == "high_protein":
-        min_g_per_kg = 0.7  # Keep fat floor low to save calories for protein
+        min_g_per_kg = 0.8  # Keep fat floor low to save calories for protein
     elif weight_category in ["overweight", "obese"]:
         min_g_per_kg = 0.75
         print(f"METABOLIC ADJUSTMENT: Lowering fat for {weight_category} category.")
     elif weight_category == "underweight":
-        min_g_per_kg = 0.9 
+        min_g_per_kg = 1 
         print(f"METABOLIC ADJUSTMENT: Increasing fat for {weight_category} category.")
     
     # 2. ACTIVITY FALLBACK
     else:
         # Active people need slightly more fat for hormone regulation/recovery
         if user.activities and len(user.activities) > 0: 
-            min_g_per_kg = 0.8
+            min_g_per_kg = 0.95
         else: 
-            min_g_per_kg = 0.7
+            min_g_per_kg = 0.85
     
     return calc_weight * min_g_per_kg
 

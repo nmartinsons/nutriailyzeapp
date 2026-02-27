@@ -164,12 +164,12 @@ def test_min_fat_floor(base_user):
     total_cal = 1200
     
     # Force low fat preference via macro_style if possible, or rely on logic
-    # Min Fat: 80kg * 0.7 = 56g
+    # Min Fat: 80kg * 0.85 = 68g (612 kcal)
     
     macros = calculate_daily_macros(total_cal, base_user, macro_style="vegan")
     # Vegan usually 55% carb / 30% fat split of remainder
     
-    assert macros['fat'] >= 56 # Should enforce floor
+    assert macros['fat'] >= 68 # Should enforce floor
     
 
 def test_calc_min_fat_target(base_user):
@@ -177,21 +177,21 @@ def test_calc_min_fat_target(base_user):
     # Base user is 80kg
     
     # 1. Standard (No activity) -> 0.7g/kg
-    # 80 * 0.7 = 56g
-    assert calc_min_fat_target(base_user) == 56.0
+    # 80 * 0.85 = 68g
+    assert calc_min_fat_target(base_user) == 68.0
     
     # 2. Keto (High Fat requirement) -> 1.2g/kg
-    # 80 * 1.2 = 96g
-    assert calc_min_fat_target(base_user, macro_style="keto") == 96.0
+    # 80 * 1.3 = 104g
+    assert calc_min_fat_target(base_user, macro_style="keto") == 104.0
     
     # 3. Heart Healthy (Lower Fat floor) -> 0.6g/kg
-    # 80 * 0.6 = 48g
-    assert calc_min_fat_target(base_user, macro_style="heart_healthy") == 48.0
+    # 80 * 0.8 = 64g
+    assert calc_min_fat_target(base_user, macro_style="heart_healthy") == 64.0
     
     # 4. Active User -> 0.8g/kg
     base_user.activities = [UserActivity(hours=5, intensity=Intensity.MODERATE)]
-    # 80 * 0.8 = 64g
-    assert calc_min_fat_target(base_user) == 64.0
+    # 80 * 0.95 = 76g
+    assert calc_min_fat_target(base_user) == 76.0
 
 def test_carb_fat_split_sedentary_gain(base_user):
     """Test split for someone bulking but sedentary"""
