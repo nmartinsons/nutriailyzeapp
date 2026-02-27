@@ -232,7 +232,7 @@ def calc_protein_target(user: UserProfile, explicit_goal: str = None, is_senior:
     else:
         goal = str(explicit_goal).lower() if explicit_goal else ""
         if is_senior: 
-            g_per_kg = 1.8
+            g_per_kg = 1.5
         elif goal in lose_keywords: 
             g_per_kg = 2.0
         elif goal in gain_keywords: 
