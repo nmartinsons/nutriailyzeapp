@@ -16,7 +16,7 @@ class ActivityLevel(str, Enum):
     LIGHT = "lightly active"
     MODERATE = "moderately active"
     VERY = "very active"
-    EXTRA = "extra_active"
+    EXTRA = "extra active"
 
 class Intensity(str, Enum):
     NONE = "none" 
