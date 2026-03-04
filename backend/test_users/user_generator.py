@@ -18,9 +18,9 @@ ACTIVITY_LEVELS = [
 # Matching string values  with models.py
 MACRO_STYLES = ["balanced", "low_carb", "keto", "high_protein", "vegan", "vegetarian", "diabetic_friendly", "heart_healthy"]
 
-ALLERGENS_POOL = ["nuts", "dairy", "gluten", "shellfish", "eggs", "soy"]
-CRAVINGS_POOL = ["soup", "burger", "pizza", "salad", "pasta", "smoothie", "pancakes"]
-MEDICAL_TEXTS = ["I have diabetes", "I am lactose intolerant", "I have celiac disease", "No nuts please"]
+ALLERGENS_POOL = ["nuts", "dairy", "gluten", "shellfish", "eggs", "soy", "fish"]
+CRAVINGS_POOL = ["broccoli", "chicken", "lamb", "tomato", "rice", "smoothie", "soup", "tofu", "cottage cheese", "beans"]
+MEDICAL_TEXTS = ["I have diabetes", "I am lactose intolerant", "I have celiac disease", "No nuts please", "I want to avoid gluten"]
 
 # Matching Intensity Enum in models.py
 EXERCISE_POOL = {

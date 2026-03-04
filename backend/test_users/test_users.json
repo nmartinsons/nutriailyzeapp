@@ -10,7 +10,7 @@
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I really want salad for lunch.",
+    "text_input": "I really want soup for lunch.",
     "meal_amount": 4
   },
   {
@@ -22,7 +22,7 @@
     "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 6.0
       }
     ],
@@ -41,14 +41,14 @@
     "daily_activity": "very active",
     "activities": [
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 2.0
       }
     ],
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I really want soup for lunch.",
+    "text_input": "I really want chicken for lunch.",
     "meal_amount": 4
   },
   {
@@ -60,11 +60,11 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 4.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 5.0
       }
     ],
@@ -83,11 +83,11 @@
     "daily_activity": "lightly active",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 2.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 4.0
       }
     ],
@@ -122,7 +122,7 @@
     "daily_activity": "moderately active",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 2.0
       }
     ],
@@ -155,7 +155,7 @@
     "daily_activity": "lightly active",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 1.0
       }
     ],
@@ -176,15 +176,15 @@
     "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 5.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 6.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 6.0
       }
     ],
@@ -203,15 +203,15 @@
     "daily_activity": "moderately active",
     "activities": [
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 5.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 6.0
       },
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 6.0
       }
     ],
@@ -232,21 +232,21 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 2.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 2.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 1.0
       }
     ],
     "goal": "gain muscle",
     "allergies": [
-      "eggs"
+      "fish"
     ],
     "macro_style": "balanced",
     "text_input": "",
@@ -254,38 +254,36 @@
   },
   {
     "id": 13,
-    "age": 60,
+    "age": 26,
     "gender": "male",
-    "weight": 110.1,
-    "height": 180.0,
-    "daily_activity": "lightly active",
+    "weight": 86.6,
+    "height": 186.0,
+    "daily_activity": "extra active",
     "activities": [],
-    "goal": "lose weight",
+    "goal": "gain muscle",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I am lactose intolerant",
+    "text_input": "I want to avoid gluten",
     "meal_amount": 4
   },
   {
     "id": 14,
-    "age": 43,
-    "gender": "female",
-    "weight": 82.9,
-    "height": 171.0,
-    "daily_activity": "very active",
+    "age": 63,
+    "gender": "male",
+    "weight": 71.4,
+    "height": 174.0,
+    "daily_activity": "moderately active",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 1.0
-      },
-      {
-        "intensity": "high",
-        "hours": 2.0
       }
     ],
     "goal": "lose weight",
-    "allergies": [],
-    "macro_style": "balanced",
+    "allergies": [
+      "eggs"
+    ],
+    "macro_style": "vegetarian",
     "text_input": "I am lactose intolerant",
     "meal_amount": 4
   },
@@ -314,7 +312,7 @@
     "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 4.0
       }
     ],
@@ -361,22 +359,22 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 2.0
       },
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 4.0
       },
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 2.0
       }
     ],
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I really want soup for lunch.",
+    "text_input": "I really want broccoli for lunch.",
     "meal_amount": 4
   },
   {
@@ -402,7 +400,7 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 6.0
       }
     ],
@@ -423,7 +421,7 @@
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I really want pasta for lunch.",
+    "text_input": "I really want beans for lunch.",
     "meal_amount": 4
   },
   {
@@ -435,7 +433,7 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 3.0
       }
     ],
@@ -456,7 +454,7 @@
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I really want pasta for lunch.",
+    "text_input": "I really want cottage cheese for lunch.",
     "meal_amount": 4
   },
   {
@@ -468,11 +466,11 @@
     "daily_activity": "moderately active",
     "activities": [
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 3.0
       },
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 2.0
       }
     ],
@@ -491,15 +489,15 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 3.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 1.0
       },
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 3.0
       }
     ],
@@ -520,25 +518,25 @@
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I really want pancakes for lunch.",
+    "text_input": "I really want lamb for lunch.",
     "meal_amount": 4
   },
   {
     "id": 28,
-    "age": 58,
-    "gender": "male",
-    "weight": 57.1,
+    "age": 28,
+    "gender": "female",
+    "weight": 73.0,
     "height": 173.0,
     "daily_activity": "very active",
     "activities": [
       {
         "intensity": "moderate",
-        "hours": 5.0
+        "hours": 1.0
       }
     ],
-    "goal": "lose weight",
+    "goal": "gain muscle",
     "allergies": [],
-    "macro_style": "keto",
+    "macro_style": "balanced",
     "text_input": "",
     "meal_amount": 4
   },
@@ -551,11 +549,11 @@
     "daily_activity": "moderately active",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 3.0
       },
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 6.0
       }
     ],
@@ -574,11 +572,11 @@
     "daily_activity": "lightly active",
     "activities": [
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 4.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 2.0
       }
     ],
@@ -597,7 +595,7 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 4.0
       }
     ],
@@ -616,7 +614,7 @@
     "daily_activity": "very active",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 3.0
       }
     ],
@@ -637,7 +635,7 @@
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I really want salad for lunch.",
+    "text_input": "I really want soup for lunch.",
     "meal_amount": 4
   },
   {
@@ -649,15 +647,15 @@
     "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 4.0
       },
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 3.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 6.0
       }
     ],
@@ -669,67 +667,61 @@
   },
   {
     "id": 35,
-    "age": 57,
+    "age": 60,
     "gender": "female",
-    "weight": 73.2,
-    "height": 160.0,
-    "daily_activity": "sedentary",
+    "weight": 57.5,
+    "height": 177.0,
+    "daily_activity": "moderately active",
     "activities": [
       {
         "intensity": "very_high",
-        "hours": 5.0
-      },
-      {
-        "intensity": "very_high",
-        "hours": 6.0
+        "hours": 3.0
       }
     ],
-    "goal": "maintain",
+    "goal": "gain muscle",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "",
+    "text_input": "I really want soup for lunch.",
     "meal_amount": 4
   },
   {
     "id": 36,
-    "age": 44,
-    "gender": "male",
-    "weight": 117.2,
-    "height": 186.0,
-    "daily_activity": "lightly active",
+    "age": 61,
+    "gender": "female",
+    "weight": 99.2,
+    "height": 173.0,
+    "daily_activity": "extra active",
     "activities": [
       {
         "intensity": "very_high",
-        "hours": 4.0
+        "hours": 5.0
       }
     ],
     "goal": "lose weight",
-    "allergies": [
-      "gluten"
-    ],
+    "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I have celiac disease",
+    "text_input": "I want to avoid gluten",
     "meal_amount": 4
   },
   {
     "id": 37,
-    "age": 46,
+    "age": 47,
     "gender": "female",
-    "weight": 77.6,
+    "weight": 65.6,
     "height": 164.0,
-    "daily_activity": "extra active",
+    "daily_activity": "lightly active",
     "activities": [
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 6.0
       }
     ],
     "goal": "lose weight",
     "allergies": [
-      "dairy"
+      "fish"
     ],
     "macro_style": "vegetarian",
-    "text_input": "",
+    "text_input": "I have celiac disease",
     "meal_amount": 4
   },
   {
@@ -741,15 +733,15 @@
     "daily_activity": "lightly active",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 4.0
       },
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 6.0
       },
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 6.0
       }
     ],
@@ -768,7 +760,7 @@
     "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 1.0
       }
     ],
@@ -787,7 +779,7 @@
     "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 2.0
       }
     ],
@@ -806,14 +798,14 @@
     "daily_activity": "moderately active",
     "activities": [
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 2.0
       }
     ],
     "goal": "maintain",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I really want burger for lunch.",
+    "text_input": "I really want lamb for lunch.",
     "meal_amount": 4
   },
   {
@@ -827,29 +819,25 @@
     "goal": "maintain",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I really want pancakes for lunch.",
+    "text_input": "I really want soup for lunch.",
     "meal_amount": 4
   },
   {
     "id": 43,
-    "age": 42,
+    "age": 55,
     "gender": "female",
-    "weight": 97.0,
-    "height": 178.0,
-    "daily_activity": "sedentary",
+    "weight": 94.7,
+    "height": 180.0,
+    "daily_activity": "extra active",
     "activities": [
       {
         "intensity": "moderate",
-        "hours": 4.0
-      },
-      {
-        "intensity": "low",
         "hours": 3.0
       }
     ],
-    "goal": "lose weight",
+    "goal": "maintain",
     "allergies": [],
-    "macro_style": "diabetic_friendly",
+    "macro_style": "balanced",
     "text_input": "",
     "meal_amount": 4
   },
@@ -862,11 +850,11 @@
     "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 2.0
       },
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 4.0
       }
     ],
@@ -885,7 +873,7 @@
     "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 5.0
       }
     ],
@@ -922,25 +910,20 @@
     "goal": "gain muscle",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I really want smoothie for lunch.",
+    "text_input": "I really want broccoli for lunch.",
     "meal_amount": 4
   },
   {
     "id": 48,
-    "age": 19,
+    "age": 33,
     "gender": "male",
-    "weight": 78.7,
-    "height": 195.0,
-    "daily_activity": "sedentary",
-    "activities": [
-      {
-        "intensity": "high",
-        "hours": 2.0
-      }
-    ],
-    "goal": "maintain",
+    "weight": 93.4,
+    "height": 171.0,
+    "daily_activity": "extra active",
+    "activities": [],
+    "goal": "lose weight",
     "allergies": [],
-    "macro_style": "balanced",
+    "macro_style": "low_carb",
     "text_input": "I have celiac disease",
     "meal_amount": 4
   },
@@ -953,11 +936,11 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 3.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 5.0
       }
     ],
@@ -976,7 +959,7 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 1.0
       }
     ],
@@ -995,7 +978,7 @@
     "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 1.0
       }
     ],
@@ -1014,11 +997,11 @@
     "daily_activity": "very active",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 2.0
       },
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 5.0
       }
     ],
@@ -1037,11 +1020,11 @@
     "daily_activity": "lightly active",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 3.0
       },
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 2.0
       }
     ],
@@ -1060,7 +1043,7 @@
     "daily_activity": "moderately active",
     "activities": [
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 5.0
       }
     ],
@@ -1081,109 +1064,113 @@
     "daily_activity": "very active",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 4.0
       }
     ],
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "high_protein",
-    "text_input": "I have celiac disease",
+    "text_input": "I want to avoid gluten",
     "meal_amount": 4
   },
   {
     "id": 56,
-    "age": 53,
+    "age": 48,
     "gender": "female",
-    "weight": 62.1,
-    "height": 166.0,
-    "daily_activity": "extra active",
+    "weight": 72.8,
+    "height": 167.0,
+    "daily_activity": "very active",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "high",
+        "hours": 3.0
+      },
+      {
+        "intensity": "very_high",
+        "hours": 3.0
+      },
+      {
+        "intensity": "high",
         "hours": 3.0
       }
     ],
-    "goal": "maintain",
+    "goal": "lose weight",
     "allergies": [],
-    "macro_style": "low_carb",
-    "text_input": "I am lactose intolerant",
+    "macro_style": "high_protein",
+    "text_input": "",
     "meal_amount": 4
   },
   {
     "id": 57,
-    "age": 31,
+    "age": 30,
     "gender": "male",
-    "weight": 89.1,
-    "height": 188.0,
-    "daily_activity": "extra active",
+    "weight": 87.8,
+    "height": 171.0,
+    "daily_activity": "moderately active",
     "activities": [
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 1.0
       },
       {
-        "intensity": "high",
-        "hours": 3.0
-      },
-      {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 3.0
       }
     ],
     "goal": "lose weight",
     "allergies": [],
-    "macro_style": "balanced",
-    "text_input": "I really want soup for lunch.",
+    "macro_style": "keto",
+    "text_input": "",
     "meal_amount": 4
   },
   {
     "id": 58,
-    "age": 53,
+    "age": 35,
     "gender": "male",
-    "weight": 88.6,
-    "height": 174.0,
-    "daily_activity": "lightly active",
-    "activities": [
-      {
-        "intensity": "moderate",
-        "hours": 1.0
-      }
-    ],
+    "weight": 95.1,
+    "height": 166.0,
+    "daily_activity": "extra active",
+    "activities": [],
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I want to lose weight fast.",
+    "text_input": "",
     "meal_amount": 4
   },
   {
     "id": 59,
-    "age": 21,
+    "age": 18,
     "gender": "male",
-    "weight": 101.4,
-    "height": 173.0,
+    "weight": 71.7,
+    "height": 183.0,
     "daily_activity": "very active",
-    "activities": [],
-    "goal": "lose weight",
-    "allergies": [
-      "soy"
+    "activities": [
+      {
+        "intensity": "low",
+        "hours": 1.0
+      }
     ],
-    "macro_style": "heart_healthy",
+    "goal": "maintain",
+    "allergies": [],
+    "macro_style": "balanced",
     "text_input": "",
     "meal_amount": 4
   },
   {
     "id": 60,
-    "age": 27,
-    "gender": "male",
-    "weight": 96.4,
-    "height": 190.0,
-    "daily_activity": "moderately active",
+    "age": 49,
+    "gender": "female",
+    "weight": 62.3,
+    "height": 152.0,
+    "daily_activity": "sedentary",
     "activities": [],
-    "goal": "lose weight",
-    "allergies": [],
-    "macro_style": "diabetic_friendly",
-    "text_input": "",
+    "goal": "gain muscle",
+    "allergies": [
+      "dairy"
+    ],
+    "macro_style": "balanced",
+    "text_input": "I really want soup for lunch.",
     "meal_amount": 4
   },
   {
@@ -1225,18 +1212,18 @@
     "daily_activity": "moderately active",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 1.0
       },
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 3.0
       }
     ],
     "goal": "gain muscle",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I really want soup for lunch.",
+    "text_input": "I really want chicken for lunch.",
     "meal_amount": 4
   },
   {
@@ -1262,7 +1249,7 @@
     "daily_activity": "moderately active",
     "activities": [
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 5.0
       }
     ],
@@ -1283,15 +1270,15 @@
     "daily_activity": "lightly active",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 6.0
       },
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 5.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 2.0
       }
     ],
@@ -1310,15 +1297,15 @@
     "daily_activity": "very active",
     "activities": [
       {
-        "intensity": "moderate",
-        "hours": 3.0
-      },
-      {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 3.0
       },
       {
         "intensity": "very_high",
+        "hours": 3.0
+      },
+      {
+        "intensity": "high",
         "hours": 6.0
       }
     ],
@@ -1351,7 +1338,7 @@
     "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 2.0
       }
     ],
@@ -1370,15 +1357,15 @@
     "daily_activity": "lightly active",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 6.0
       },
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 1.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 6.0
       }
     ],
@@ -1397,7 +1384,7 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 6.0
       }
     ],
@@ -1430,7 +1417,7 @@
     "daily_activity": "very active",
     "activities": [
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 1.0
       }
     ],
@@ -1449,7 +1436,7 @@
     "daily_activity": "moderately active",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 4.0
       }
     ],
@@ -1468,11 +1455,11 @@
     "daily_activity": "very active",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 4.0
       },
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 4.0
       }
     ],
@@ -1491,11 +1478,11 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 6.0
       },
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 1.0
       }
     ],
@@ -1514,7 +1501,7 @@
     "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "very_high",
+        "intensity": "high",
         "hours": 6.0
       }
     ],
@@ -1533,85 +1520,80 @@
     "daily_activity": "moderately active",
     "activities": [
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 4.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 6.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 4.0
       }
     ],
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I really want pancakes for lunch.",
+    "text_input": "I really want broccoli for lunch.",
     "meal_amount": 4
   },
   {
     "id": 79,
-    "age": 36,
-    "gender": "male",
-    "weight": 71.6,
-    "height": 176.0,
+    "age": 40,
+    "gender": "female",
+    "weight": 62.7,
+    "height": 161.0,
     "daily_activity": "lightly active",
-    "activities": [],
-    "goal": "maintain",
+    "activities": [
+      {
+        "intensity": "low",
+        "hours": 2.0
+      }
+    ],
+    "goal": "lose weight",
     "allergies": [],
-    "macro_style": "balanced",
-    "text_input": "I really want soup for lunch.",
+    "macro_style": "diabetic_friendly",
+    "text_input": "I want to avoid gluten",
     "meal_amount": 4
   },
   {
     "id": 80,
-    "age": 57,
-    "gender": "female",
-    "weight": 60.2,
-    "height": 171.0,
-    "daily_activity": "extra active",
+    "age": 32,
+    "gender": "male",
+    "weight": 90.1,
+    "height": 179.0,
+    "daily_activity": "very active",
     "activities": [],
-    "goal": "maintain",
+    "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "",
+    "text_input": "I want to avoid gluten",
     "meal_amount": 4
   },
   {
     "id": 81,
-    "age": 36,
-    "gender": "female",
-    "weight": 77.2,
-    "height": 171.0,
-    "daily_activity": "sedentary",
-    "activities": [
-      {
-        "intensity": "very_high",
-        "hours": 5.0
-      }
-    ],
-    "goal": "maintain",
+    "age": 22,
+    "gender": "male",
+    "weight": 108.8,
+    "height": 179.0,
+    "daily_activity": "extra active",
+    "activities": [],
+    "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I have celiac disease",
+    "text_input": "I want to lose weight fast.",
     "meal_amount": 4
   },
   {
     "id": 82,
-    "age": 42,
-    "gender": "male",
-    "weight": 92.8,
-    "height": 192.0,
-    "daily_activity": "lightly active",
-    "activities": [
-      {
-        "intensity": "very_high",
-        "hours": 5.0
-      }
-    ],
-    "goal": "maintain",
+    "age": 30,
+    "gender": "female",
+    "weight": 84.5,
+    "height": 162.0,
+    "daily_activity": "sedentary",
+    "activities": [],
+    "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
     "text_input": "",
@@ -1619,86 +1601,68 @@
   },
   {
     "id": 83,
-    "age": 35,
+    "age": 19,
     "gender": "female",
-    "weight": 60.2,
-    "height": 150.0,
-    "daily_activity": "sedentary",
-    "activities": [
-      {
-        "intensity": "moderate",
-        "hours": 3.0
-      },
-      {
-        "intensity": "high",
-        "hours": 5.0
-      },
-      {
-        "intensity": "very_high",
-        "hours": 2.0
-      }
-    ],
+    "weight": 88.3,
+    "height": 176.0,
+    "daily_activity": "moderately active",
+    "activities": [],
     "goal": "gain muscle",
     "allergies": [],
-    "macro_style": "vegan",
+    "macro_style": "balanced",
     "text_input": "",
     "meal_amount": 4
   },
   {
     "id": 84,
-    "age": 58,
-    "gender": "male",
-    "weight": 93.6,
-    "height": 168.0,
-    "daily_activity": "sedentary",
+    "age": 36,
+    "gender": "female",
+    "weight": 94.4,
+    "height": 174.0,
+    "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "moderate",
-        "hours": 1.0
+        "intensity": "low",
+        "hours": 6.0
+      },
+      {
+        "intensity": "low",
+        "hours": 5.0
       }
     ],
     "goal": "lose weight",
     "allergies": [],
-    "macro_style": "balanced",
-    "text_input": "I really want pizza for lunch.",
+    "macro_style": "keto",
+    "text_input": "",
     "meal_amount": 4
   },
   {
     "id": 85,
-    "age": 65,
-    "gender": "female",
-    "weight": 51.4,
-    "height": 163.0,
-    "daily_activity": "lightly active",
+    "age": 37,
+    "gender": "male",
+    "weight": 88.0,
+    "height": 190.0,
+    "daily_activity": "extra active",
     "activities": [
       {
-        "intensity": "very_high",
-        "hours": 5.0
-      },
-      {
-        "intensity": "very_high",
-        "hours": 2.0
+        "intensity": "low",
+        "hours": 1.0
       }
     ],
     "goal": "maintain",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "",
+    "text_input": "I want to avoid gluten",
     "meal_amount": 4
   },
   {
     "id": 86,
-    "age": 65,
+    "age": 51,
     "gender": "female",
-    "weight": 70.3,
-    "height": 177.0,
-    "daily_activity": "sedentary",
-    "activities": [
-      {
-        "intensity": "low",
-        "hours": 2.0
-      }
-    ],
+    "weight": 91.9,
+    "height": 166.0,
+    "daily_activity": "lightly active",
+    "activities": [],
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
@@ -1707,31 +1671,16 @@
   },
   {
     "id": 87,
-    "age": 23,
+    "age": 25,
     "gender": "female",
-    "weight": 72.0,
-    "height": 175.0,
-    "daily_activity": "moderately active",
+    "weight": 92.2,
+    "height": 164.0,
+    "daily_activity": "lightly active",
     "activities": [
       {
-        "intensity": "moderate",
-        "hours": 3.0
-      }
-    ],
-    "goal": "gain muscle",
-    "allergies": [],
-    "macro_style": "balanced",
-    "text_input": "I want to gain muscle fast.",
-    "meal_amount": 4
-  },
-  {
-    "id": 88,
-    "age": 24,
-    "gender": "female",
-    "weight": 59.8,
-    "height": 171.0,
-    "daily_activity": "sedentary",
-    "activities": [
+        "intensity": "low",
+        "hours": 6.0
+      },
       {
         "intensity": "very_high",
         "hours": 5.0
@@ -1740,28 +1689,66 @@
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
-    "text_input": "I want to lose weight fast.",
+    "text_input": "I really want cottage cheese for lunch.",
+    "meal_amount": 4
+  },
+  {
+    "id": 88,
+    "age": 47,
+    "gender": "male",
+    "weight": 89.2,
+    "height": 176.0,
+    "daily_activity": "moderately active",
+    "activities": [
+      {
+        "intensity": "high",
+        "hours": 1.0
+      }
+    ],
+    "goal": "gain muscle",
+    "allergies": [],
+    "macro_style": "balanced",
+    "text_input": "",
     "meal_amount": 4
   },
   {
     "id": 89,
-    "age": 59,
+    "age": 57,
     "gender": "female",
-    "weight": 48.4,
-    "height": 163.0,
-    "daily_activity": "sedentary",
+    "weight": 69.8,
+    "height": 157.0,
+    "daily_activity": "very active",
     "activities": [
       {
+        "intensity": "high",
+        "hours": 6.0
+      },
+      {
         "intensity": "very_high",
-        "hours": 4.0
+        "hours": 1.0
       },
       {
         "intensity": "low",
         "hours": 1.0
-      },
+      }
+    ],
+    "goal": "lose weight",
+    "allergies": [],
+    "macro_style": "balanced",
+    "text_input": "I really want cottage cheese for lunch.",
+    "meal_amount": 4
+  },
+  {
+    "id": 90,
+    "age": 42,
+    "gender": "male",
+    "weight": 73.9,
+    "height": 179.0,
+    "daily_activity": "extra active",
+    "activities": [
       {
-        "intensity": "high",
-        "hours": 5.0
+        "intensity": "low",
+        "hours": 4.0
       }
     ],
     "goal": "gain muscle",
@@ -1771,32 +1758,18 @@
     "meal_amount": 4
   },
   {
-    "id": 90,
-    "age": 55,
+    "id": 91,
+    "age": 20,
     "gender": "female",
-    "weight": 89.2,
-    "height": 173.0,
+    "weight": 68.2,
+    "height": 172.0,
     "daily_activity": "very active",
     "activities": [
       {
-        "intensity": "moderate",
-        "hours": 5.0
+        "intensity": "low",
+        "hours": 3.0
       }
     ],
-    "goal": "maintain",
-    "allergies": [],
-    "macro_style": "balanced",
-    "text_input": "",
-    "meal_amount": 4
-  },
-  {
-    "id": 91,
-    "age": 46,
-    "gender": "male",
-    "weight": 109.1,
-    "height": 179.0,
-    "daily_activity": "moderately active",
-    "activities": [],
     "goal": "lose weight",
     "allergies": [],
     "macro_style": "balanced",
@@ -1812,37 +1785,40 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 1.0
       },
       {
-        "intensity": "high",
+        "intensity": "low",
         "hours": 6.0
       },
       {
-        "intensity": "low",
+        "intensity": "moderate",
         "hours": 1.0
       }
     ],
     "goal": "maintain",
     "allergies": [],
     "macro_style": "keto",
-    "text_input": "I am lactose intolerant",
+    "text_input": "I want to avoid gluten",
     "meal_amount": 4
   },
   {
     "id": 93,
-    "age": 32,
+    "age": 55,
     "gender": "male",
-    "weight": 94.1,
-    "height": 175.0,
-    "daily_activity": "extra active",
-    "activities": [],
-    "goal": "lose weight",
-    "allergies": [
-      "dairy"
+    "weight": 92.0,
+    "height": 171.0,
+    "daily_activity": "lightly active",
+    "activities": [
+      {
+        "intensity": "low",
+        "hours": 5.0
+      }
     ],
-    "macro_style": "balanced",
+    "goal": "lose weight",
+    "allergies": [],
+    "macro_style": "keto",
     "text_input": "",
     "meal_amount": 4
   },
@@ -1897,7 +1873,7 @@
     "daily_activity": "sedentary",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "very_high",
         "hours": 1.0
       }
     ],
@@ -1906,63 +1882,74 @@
       "dairy"
     ],
     "macro_style": "balanced",
-    "text_input": "I have celiac disease",
+    "text_input": "I want to avoid gluten",
     "meal_amount": 4
   },
   {
     "id": 98,
-    "age": 56,
+    "age": 42,
     "gender": "female",
-    "weight": 59.5,
-    "height": 166.0,
-    "daily_activity": "extra active",
+    "weight": 74.5,
+    "height": 169.0,
+    "daily_activity": "very active",
     "activities": [
       {
-        "intensity": "low",
-        "hours": 6.0
+        "intensity": "very_high",
+        "hours": 1.0
       }
     ],
-    "goal": "lose weight",
+    "goal": "gain muscle",
     "allergies": [],
-    "macro_style": "balanced",
+    "macro_style": "high_protein",
     "text_input": "",
     "meal_amount": 4
   },
   {
     "id": 99,
-    "age": 45,
-    "gender": "male",
-    "weight": 105.3,
-    "height": 179.0,
+    "age": 39,
+    "gender": "female",
+    "weight": 76.3,
+    "height": 176.0,
     "daily_activity": "very active",
     "activities": [
       {
-        "intensity": "moderate",
+        "intensity": "high",
         "hours": 4.0
+      },
+      {
+        "intensity": "high",
+        "hours": 6.0
       }
     ],
-    "goal": "lose weight",
+    "goal": "maintain",
     "allergies": [
       "shellfish"
     ],
     "macro_style": "balanced",
-    "text_input": "I have celiac disease",
+    "text_input": "I really want chicken for lunch.",
     "meal_amount": 4
   },
   {
     "id": 100,
-    "age": 27,
-    "gender": "female",
-    "weight": 98.1,
-    "height": 171.0,
-    "daily_activity": "sedentary",
-    "activities": [],
-    "goal": "lose weight",
-    "allergies": [
-      "soy"
+    "age": 45,
+    "gender": "male",
+    "weight": 85.1,
+    "height": 168.0,
+    "daily_activity": "moderately active",
+    "activities": [
+      {
+        "intensity": "moderate",
+        "hours": 5.0
+      },
+      {
+        "intensity": "high",
+        "hours": 6.0
+      }
     ],
-    "macro_style": "diabetic_friendly",
-    "text_input": "I want to lose weight fast.",
+    "goal": "lose weight",
+    "allergies": [],
+    "macro_style": "vegetarian",
+    "text_input": "",
     "meal_amount": 4
   }
 ]
