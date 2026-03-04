@@ -57,8 +57,7 @@ def generate_synthetic_users():
             intensity_key = random.choice(list(EXERCISE_POOL))
             hours = random.randint(1, 6)
             
-            # Structure matches UserActivity logic, 
-            # though your model only strictly needs 'hours' and 'intensity'
+            # Structure matches UserActivity logic
             user_activities.append({
                 "intensity": intensity_key, 
                 "hours": float(hours),
@@ -100,13 +99,13 @@ def generate_synthetic_users():
             "gender": gender,
             "weight": weight,
             "height": float(height),
-            "daily_activity": activity_level, # Matches Pydantic field name
+            "daily_activity": activity_level, 
             "activities": user_activities,
             "goal": goal,
             "allergies": allergies,
-            "macro_style": style, # Note: Not in UserProfile, used by Intent logic simulation
+            "macro_style": style,
             "text_input": text_input,
-            "meal_amount": 4
+            "meal_amount": random.randint(3, 6) 
         }
         
         profiles.append(user_profile)
