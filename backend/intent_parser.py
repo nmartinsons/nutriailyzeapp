@@ -40,15 +40,15 @@ class IntentParser:
             Foods to avoid due to medical conditions OR explicit dislikes.
             Combine specific ingredients and broad categories.
             Examples:
-            - "I have diabetes" → ["sugar", "syrup", "juice", "white bread", "white rice", "jam", "honey", "dried fruit"]
-            - "I hate broccoli" → ["broccoli"]
-            - "No nuts" → ["nuts", "peanut", "almond", "walnut"]
-            - "Gluten free" → ["wheat", "barley", "rye", "bread", "pasta"]
+            - "I have diabetes" -> ["sugar", "syrup", "juice", "white bread", "white rice", "jam", "honey", "dried fruit"]
+            - "I hate broccoli" -> ["broccoli"]
+            - "No nuts" -> ["nuts", "peanut", "almond", "walnut"]
+            - "Gluten free" -> ["wheat", "barley", "rye", "bread", "pasta"]
 
             4. include_keywords (ARRAY of strings):
             Foods the user EXPLICITLY asks for.
-            Example: "I really want some chicken today" → ["chicken"]
-            Example: "Use up my eggs" → ["egg"]
+            Example: "I really want some chicken today" -> ["chicken"]
+            Example: "Use up my eggs" -> ["egg"]
 
             5. focus_ingredients (ARRAY of strings):
             List 5-15 specific, high-density ingredients that are BEST for the user's specific request or condition.
