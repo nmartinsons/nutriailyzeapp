@@ -1,3 +1,5 @@
+import re
+
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 from rules_engine import is_safe_to_eat
@@ -664,7 +666,7 @@ class KNN:
         # These MUST appear in the plan if possible
         has_cravings = False
         if craving_keywords:
-            craving_pattern = '|'.join([k.lower() for k in craving_keywords])
+            craving_pattern = '|'.join([re.escape(k.lower()) for k in craving_keywords])
             if craving_pattern:
                 craving_df = temp_df[temp_df['name'].str.contains(craving_pattern, case=False, na=False)]
                 
@@ -683,7 +685,7 @@ class KNN:
         
         # PRIORITY 2: Focus/Include Keywords (AI-suggested foods)
         if include_keywords:
-            pattern = '|'.join([k.lower() for k in include_keywords])
+            pattern = '|'.join([re.escape(k.lower()) for k in include_keywords])
             if pattern:
                 focused_df = temp_df[temp_df['name'].str.contains(pattern, case=False, na=False)]
                 
