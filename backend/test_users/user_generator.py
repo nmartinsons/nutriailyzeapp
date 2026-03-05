@@ -18,9 +18,9 @@ ACTIVITY_LEVELS = [
 # Matching string values  with models.py
 MACRO_STYLES = ["balanced", "low_carb", "keto", "high_protein", "vegan", "vegetarian", "diabetic_friendly", "heart_healthy"]
 
-ALLERGENS_POOL = ["nuts", "dairy", "gluten", "shellfish", "eggs", "soy", "fish"]
+ALLERGENS_POOL = ["nuts", "milk", "gluten", "shellfish", "eggs", "soy", "fish"]
 CRAVINGS_POOL = ["broccoli", "chicken", "lamb", "tomato", "rice", "smoothie", "soup", "tofu", "cottage cheese", "beans"]
-MEDICAL_TEXTS = ["I have diabetes", "I am lactose intolerant", "I have celiac disease", "No nuts please", "I want to avoid gluten"]
+MEDICAL_TEXTS = ["I have diabetes", "I am lactose intolerant", "I have celiac disease", "I have high cholesterol", "I have hypertension"]
 
 # Matching Intensity Enum in models.py
 EXERCISE_POOL = {
@@ -87,7 +87,7 @@ def generate_synthetic_users():
         dice = random.random()
         if dice < 0.20: 
             craving = random.choice(CRAVINGS_POOL)
-            text_input = f"I really want {craving} for lunch."
+            text_input = f"I really want {craving}."
         elif dice < 0.35:
             text_input = random.choice(MEDICAL_TEXTS)
         elif dice < 0.50:
