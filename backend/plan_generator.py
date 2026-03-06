@@ -1,5 +1,6 @@
 import os
 import json
+import copy
 import requests
 from dotenv import load_dotenv
 from knn import KNN
@@ -296,6 +297,29 @@ class MealPlanGenerator:
                 # Helps to choose meals that are more likely to be higher in fat, which is crucial for a ketogenic diet.
                 slot['target_macros']['fat'] = int(slot['target_macros'].get('fat', 0) * 1.2)
                 slot['target_macros']['fat, total (g)'] = slot['target_macros']['fat']
+
+        def _find_emergency_option(target_macros: dict):
+            emergency_options = self.knn.find_single_food(
+                target_macros,
+                meal_type="snack",
+                only_healthy=False,
+                ignore_names=[],
+                ignore_keywords=None,
+                include_keywords=None,
+                craving_keywords=None,
+            )
+            if emergency_options:
+                return emergency_options
+
+            return self.knn.find_composite_meal(
+                target_macros,
+                meal_type="lunch",
+                only_healthy=False,
+                ignore_names=[],
+                ignore_keywords=None,
+                include_keywords=None,
+                craving_keywords=None,
+            )
                 
         for slot in structure:
             meal_name = slot['meal_name'].lower()
@@ -315,25 +339,111 @@ class MealPlanGenerator:
             # Determines whether to search for a composite meal (like a full lunch or dinner) or a single food item (like a snack) based on the meal name.
             if "lunch" in meal_name or "dinner" in meal_name or "breakfast" in meal_name:
                 current_type = "breakfast" if "breakfast" in meal_name else "lunch"
-                options = self.knn.find_composite_meal(
-                    target, 
-                    meal_type=current_type, 
-                    only_healthy=True, 
-                    ignore_names=daily_used_foods, 
-                    ignore_keywords=final_avoids, 
-                    include_keywords=ai_focus_foods,  
-                    craving_keywords=user_cravings     
-                )
+                composite_attempts = [
+                    {
+                        "stage": "strict",
+                        "only_healthy": True,
+                        "ignore_names": daily_used_foods,
+                        "ignore_keywords": final_avoids,
+                        "include_keywords": ai_focus_foods,
+                        "craving_keywords": user_cravings,
+                    },
+                    {
+                        "stage": "allow_repeats",
+                        "only_healthy": True,
+                        "ignore_names": [],
+                        "ignore_keywords": final_avoids,
+                        "include_keywords": ai_focus_foods,
+                        "craving_keywords": user_cravings,
+                    },
+                    {
+                        "stage": "relax_health",
+                        "only_healthy": False,
+                        "ignore_names": [],
+                        "ignore_keywords": final_avoids,
+                        "include_keywords": ai_focus_foods,
+                        "craving_keywords": user_cravings,
+                    },
+                    {
+                        "stage": "general_fallback",
+                        "only_healthy": False,
+                        "ignore_names": [],
+                        "ignore_keywords": final_avoids,
+                        "include_keywords": None,
+                        "craving_keywords": None,
+                    },
+                ]
+
+                options = []
+                for attempt in composite_attempts:
+                    options = self.knn.find_composite_meal(
+                        target,
+                        meal_type=current_type,
+                        only_healthy=attempt["only_healthy"],
+                        ignore_names=attempt["ignore_names"],
+                        ignore_keywords=attempt["ignore_keywords"],
+                        include_keywords=attempt["include_keywords"],
+                        craving_keywords=attempt["craving_keywords"],
+                    )
+                    if options:
+                        break
             else:
-                options = self.knn.find_single_food(
-                    target, 
-                    meal_type="snack", 
-                    only_healthy=True, 
-                    ignore_names=daily_used_foods, 
-                    ignore_keywords=final_avoids,
-                    include_keywords=ai_focus_foods,   
-                    craving_keywords=user_cravings    
-                )
+                single_attempts = [
+                    {
+                        "stage": "strict",
+                        "only_healthy": True,
+                        "ignore_names": daily_used_foods,
+                        "ignore_keywords": final_avoids,
+                        "include_keywords": ai_focus_foods,
+                        "craving_keywords": user_cravings,
+                    },
+                    {
+                        "stage": "allow_repeats",
+                        "only_healthy": True,
+                        "ignore_names": [],
+                        "ignore_keywords": final_avoids,
+                        "include_keywords": ai_focus_foods,
+                        "craving_keywords": user_cravings,
+                    },
+                    {
+                        "stage": "relax_health",
+                        "only_healthy": False,
+                        "ignore_names": [],
+                        "ignore_keywords": final_avoids,
+                        "include_keywords": ai_focus_foods,
+                        "craving_keywords": user_cravings,
+                    },
+                    {
+                        "stage": "general_fallback",
+                        "only_healthy": False,
+                        "ignore_names": [],
+                        "ignore_keywords": final_avoids,
+                        "include_keywords": None,
+                        "craving_keywords": None,
+                    },
+                ]
+
+                options = []
+                for attempt in single_attempts:
+                    options = self.knn.find_single_food(
+                        target,
+                        meal_type="snack",
+                        only_healthy=attempt["only_healthy"],
+                        ignore_names=attempt["ignore_names"],
+                        ignore_keywords=attempt["ignore_keywords"],
+                        include_keywords=attempt["include_keywords"],
+                        craving_keywords=attempt["craving_keywords"],
+                    )
+                    if options:
+                        break
+
+            if not options:
+                print(f"KNN fallback exhausted for user {self.user.id}, slot '{slot['meal_name']}'. Trying emergency search.")
+                options = _find_emergency_option(target)
+
+            if not options and raw_plan_list:
+                print(f"No emergency option for user {self.user.id}, slot '{slot['meal_name']}'. Reusing previous meal.")
+                options = [copy.deepcopy(raw_plan_list[-1]['food_data'])]
             
             if options:
                 # Rotation Selection
@@ -356,6 +466,8 @@ class MealPlanGenerator:
                     "target_macros": target, # What we aimed for 
                     "food_data": selected_meal # What we actually picked (The food object)
                 })
+            else:
+                print(f"WARNING: Could not fill slot '{slot['meal_name']}' for user {self.user.id}.")
         
         # This line extracts just the food data from the raw plan list to prepare for the rescue operations. The rescue functions will modify this list in place to adjust the meals to better meet the daily targets, while respecting the avoid keywords.
         meals_only = [m['food_data'] for m in raw_plan_list]
