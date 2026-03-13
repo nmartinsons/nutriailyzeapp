@@ -241,9 +241,30 @@ class KNN:
                 if col in self.boosters_df.columns: # Ensures the column exists in boosters_df before modifying it 
                     # Converts values to numbers (float). Invalid entries like NaN become NaN and are then filled with 0.0
                     self.boosters_df[col] = pd.to_numeric(self.boosters_df[col], errors='coerce').fillna(0.0)
+
+        # Ensure both tables always expose a safe string 'name' column.
+        self.df = self._ensure_name_column(self.df)
+        self.boosters_df = self._ensure_name_column(self.boosters_df)
+
+    def _ensure_name_column(self, df: pd.DataFrame) -> pd.DataFrame:
+        if df is None:
+            return pd.DataFrame(columns=['name'])
+
+        out = df.copy()
+
+        if 'name' not in out.columns:
+            if 'index' in out.columns:
+                out = out.rename(columns={'index': 'name'})
+            else:
+                out = out.reset_index().rename(columns={'index': 'name'})
+
+        out['name'] = out['name'].fillna('').astype(str)
+        return out
     
     # This function is used to filter a DataFrame based on a list of keywords that should be excluded. It checks if any of the exclude_keywords are present in the 'name' column of the DataFrame and filters out those rows.
     def _filter_by_keywords(self, df, exclude_keywords):
+        df = self._ensure_name_column(df)
+
         if not exclude_keywords:
             return df
         # Converts exclude_keywords to lowercase for case-insensitive matching.
@@ -1009,17 +1030,9 @@ class KNN:
 
         if is_powder:
             # 1. Add Liquid Base
-            mask = (
-                (self.df['is_liquid'] == True) &
-                (self.df['name'].str.contains('milk|oat drink|almond drink|soy', case=False, regex=True)) &
-                (self.df['processing_level'].isin(self.ALLOWED_PROCESSING_LEVELS)) &
-                (~self.df['name'].str.contains('chocolate|strawberry|vanilla|sugar|cream|condensed|flavored', case=False, regex=True))
-            )
-            
-            liquid_candidates = self.df[mask]
+            liq = self._find_dairy_for_cereal(ignore_keywords=ignore_keywords)
 
-            if not liquid_candidates.empty:
-                liq = liquid_candidates.sample(1).iloc[0].to_dict()
+            if liq:
                 self._add_booster(
                     boosters_added, liq, 300.0, "Liquid Base for Shake"
                 )
@@ -1724,6 +1737,7 @@ class KNN:
                 (valid_boosters['category'].isin(['side', 'snack'])) & 
                 (valid_boosters[self.COL_CARBS] >= 15)                 
             ].copy()
+            all_boosters = self._ensure_name_column(all_boosters)
             
             savory_exclude_for_breakfast = self.SAVORY_EXCLUDE_FOR_BREAKFAST
             
@@ -1783,46 +1797,77 @@ class KNN:
                     
                     # Filter options
                     current_options = all_boosters.copy()
+                    current_options = self._ensure_name_column(current_options)
+
+                    def _name_series(df):
+                        if 'name' not in df.columns:
+                            return None
+                        return df['name'].fillna('').astype(str)
+
+                    names = _name_series(current_options)
+                    if names is None:
+                        continue
                     
                     # Removing duplicates: If we have already used "Whole Wheat Bread" as a booster in Meal 1, we don't want to add it again in Meal 3. 
                     # This ensures variety across meals and prevents the same carb source from being added multiple times in the same day.
                     if used_booster_names:
-                        current_options = current_options[~current_options['name'].isin(used_booster_names)]
+                        current_options = current_options[~names.isin(used_booster_names)]
+                        names = _name_series(current_options)
+                        if names is None:
+                            continue
                         
                     # Remove items that are already in this meal that are similar like "White Rice" and "Brown Rice". We don't want to add "Brown Rice" booster to a meal that already has "White Rice" as a main or side dish.
                     current_options = current_options[
-                        ~current_options['name'].apply(lambda x: self._foods_are_similar(x, main_name) or self._foods_are_similar(x, side_name))
+                        ~names.apply(lambda x: self._foods_are_similar(x, main_name) or self._foods_are_similar(x, side_name))
                     ]
+                    names = _name_series(current_options)
+                    if names is None:
+                        continue
                     
                     
                     if is_breakfast:
                         #  It removes "Savory" items like Pasta, Rice, Noodles, Beans, Soup.
                         current_options = current_options[
-                            ~current_options['name'].str.contains('|'.join(savory_exclude_for_breakfast), case=False, regex=True)
+                            ~names.str.contains('|'.join(savory_exclude_for_breakfast), case=False, regex=True)
                         ]
+                        names = _name_series(current_options)
+                        if names is None:
+                            continue
                         # Throwing away everything else and only keeps breakfast foods
                         if 'is_breakfast' in current_options.columns:
                             tagged = current_options[current_options['is_breakfast'] == True]
                             if not tagged.empty: 
                                 current_options = tagged
+                                names = _name_series(current_options)
+                                if names is None:
+                                    continue
                     else:
                         if 'is_breakfast' in current_options.columns:
                             # Remove foods strictly marked as breakfast-only
                             current_options = current_options[current_options['is_breakfast'] == False]
+                            names = _name_series(current_options)
+                            if names is None:
+                                continue
                         # Removing items with names like "Cereal", "Porridge"
                         current_options = current_options[
-                            ~current_options['name'].str.contains(
+                            ~names.str.contains(
                                 '|'.join(self.BREAKFAST_ONLY_AND_SNACK_WORDS), case=False, regex=True
                             )
                         ]
+                        names = _name_series(current_options)
+                        if names is None:
+                            continue
                     
                     # Does the main dish already involve bread?
                     meal_has_bread = any(k in str(meal).lower() for k in self.BREAD_KEYWORDS)
                     # Did we add bread to a previous meal today?
                     if bread_used_globally or meal_has_bread:
                         current_options = current_options[
-                            ~current_options['name'].str.contains('|'.join(self.BREAD_KEYWORDS), case=False, regex=True)
+                            ~names.str.contains('|'.join(self.BREAD_KEYWORDS), case=False, regex=True)
                         ]
+                        names = _name_series(current_options)
+                        if names is None:
+                            continue
                     
                     if current_options.empty: 
                         continue
