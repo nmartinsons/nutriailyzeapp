@@ -151,7 +151,7 @@ class MealPlanGenerator:
                 ],
             "vegetarian": ["chicken", "beef", "pork", "meat", "fish", "seafood", "ham", "bacon", "sausage", "sausage", "turkey", "duck", "lamb", "veal", 
                            "venison", "goat", "rabbit", "mussel", "shrimp", "prawn", "crab", "lobster", "saithe", "anchovy", "caviar", "eel", "herring", 
-                           "trout", "tuna", "salmon", "sardine", "squid", "octopus", "clam", "scallop", "steak", "reindeer"],
+                           "trout", "tuna", "salmon", "sardine", "squid", "octopus", "clam", "scallop", "steak", "reindeer", "pike", "mackerel", "pollock", "haddock", "halibut", "flounder"],
             "pescatarian": ["chicken", "beef", "pork", "meat", "ham", "bacon", "sausage", "turkey", "duck", "lamb", "veal", "venison", "goat", "rabbit",
                             "steak", "reindeer", "meatball", "burger", "chop", "liver", "kidney", "ribs", "salami", "pepperoni", "chorizo"],
             "heart_healthy": ["fried", "fatty", "saturated", "processed", "sugar", "syrup", "honey", "salty", "salted", "bacon", "sausage", "ham", "salami", "pepperoni", "chorizo"],
