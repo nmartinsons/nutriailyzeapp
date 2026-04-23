@@ -2,20 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter_nutriailyze_app/login_screen.dart';
 import 'package:flutter_nutriailyze_app/signup_screen.dart';
 import 'package:flutter_nutriailyze_app/home_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load environment variables from the .env file
-  await dotenv.load(fileName: ".env");
-  final url = dotenv.env['SUPABASE_URL'];
-  final key = dotenv.env['SUPABASE_KEY'];
+  // For web deployments, use compile-time values or safe public defaults.
+  // These are public Supabase client credentials (URL + publishable key).
+  const url = String.fromEnvironment(
+    'SUPABASE_URL',
+    defaultValue: 'https://zsqswroaevuxqdamdykl.supabase.co',
+  );
+  const key = String.fromEnvironment(
+    'SUPABASE_KEY',
+    defaultValue:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzcXN3cm9hZXZ1eHFkYW1keWtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwNzYyMjUsImV4cCI6MjA3NDY1MjIyNX0.yMOUsRZhffVqBDPJmi_yX9hJ1UjWQDdL6jNowYKPVqI',
+  );
+
+  if (url.isEmpty || key.isEmpty) {
+    throw StateError(
+      'Missing SUPABASE_URL or SUPABASE_KEY. Provide them via --dart-define for build/release.',
+    );
+  }
+
+  final parsedUrl = Uri.tryParse(url);
+  if (parsedUrl == null || !parsedUrl.hasScheme || parsedUrl.host.isEmpty) {
+    throw FormatException(
+      'SUPABASE_URL is invalid. Expected a full URL like https://your-project.supabase.co',
+      url,
+    );
+  }
 
   // Initialize Supabase with the URL and anon key from environment variables
-  await Supabase.initialize(url: url ?? '', anonKey: key ?? '');
+  await Supabase.initialize(url: url, anonKey: key);
 
   // Now that Supabase is initialized, we can run the app
   runApp(const MyApp());
@@ -93,6 +114,27 @@ class AuthGate extends StatelessWidget {
 class LoginOrSignupScreen extends StatelessWidget {
   const LoginOrSignupScreen({super.key});
 
+  Future<void> _handleGoogleSignIn(BuildContext context) async {
+    try {
+      await supabase.auth.signInWithOAuth(OAuthProvider.google);
+    } on AuthException catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message), backgroundColor: Colors.redAccent),
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Google sign-in failed.'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,6 +211,11 @@ class LoginOrSignupScreen extends StatelessWidget {
                       );
                     },
                   ),
+                  const SizedBox(height: 17),
+                  _buildGoogleButton(
+                    context,
+                    onPressed: () => _handleGoogleSignIn(context),
+                  ),
                 ],
               ),
             ),
@@ -203,6 +250,45 @@ class LoginOrSignupScreen extends StatelessWidget {
           ),
           onPressed: onPressed,
           child: Text(text),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGoogleButton(
+    BuildContext context, {
+    required VoidCallback onPressed,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFF6F6F6),
+            foregroundColor: const Color(0xFF333333),
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            textStyle: GoogleFonts.ptMono(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          onPressed: onPressed,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                'assets/icons/google.svg',
+                width: 18,
+                height: 18,
+              ),
+              const SizedBox(width: 10),
+              const Text('Continue with Google'),
+            ],
+          ),
         ),
       ),
     );
