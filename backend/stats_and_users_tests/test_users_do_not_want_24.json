@@ -1,0 +1,453 @@
+[
+  {
+    "id": 1,
+    "age": 38,
+    "gender": "male",
+    "weight": 132.2,
+    "height": 197.0,
+    "daily_activity": "sedentary",
+    "activities": [
+      {
+        "intensity": "high",
+        "hours": 5.0
+      },
+      {
+        "intensity": "high",
+        "hours": 5.0
+      }
+    ],
+    "goal": "lose weight",
+    "allergies": [
+      "gluten"
+    ],
+    "macro_style": "balanced",
+    "text_input": "I do not want Skyr, Plain, 4% Fat.",
+    "meal_amount": 6
+  },
+  {
+    "id": 3,
+    "age": 36,
+    "gender": "female",
+    "weight": 59.8,
+    "height": 179.0,
+    "daily_activity": "extra active",
+    "activities": [
+      {
+        "intensity": "moderate",
+        "hours": 3.0
+      }
+    ],
+    "goal": "maintain",
+    "allergies": [],
+    "macro_style": "balanced",
+    "text_input": "I do not want Oven-Baked Beef Steak Mince Pancake.",
+    "meal_amount": 5
+  },
+  {
+    "id": 4,
+    "age": 50,
+    "gender": "female",
+    "weight": 77.2,
+    "height": 181.0,
+    "daily_activity": "extra active",
+    "activities": [],
+    "goal": "gain muscle",
+    "allergies": [],
+    "macro_style": "low_carb",
+    "text_input": "I do not want Beetroot Feta Cheese Omelette, Oven-Baked.",
+    "meal_amount": 5
+  },
+  {
+    "id": 5,
+    "age": 26,
+    "gender": "male",
+    "weight": 96.8,
+    "height": 168.0,
+    "daily_activity": "extra active",
+    "activities": [
+      {
+        "intensity": "low",
+        "hours": 6.0
+      },
+      {
+        "intensity": "high",
+        "hours": 4.0
+      }
+    ],
+    "goal": "lose weight",
+    "allergies": [
+      "nuts"
+    ],
+    "macro_style": "vegan",
+    "text_input": "I do not want Bean Stew.",
+    "meal_amount": 5
+  },
+  {
+    "id": 6,
+    "age": 63,
+    "gender": "female",
+    "weight": 70.3,
+    "height": 184.0,
+    "daily_activity": "very active",
+    "activities": [
+      {
+        "intensity": "moderate",
+        "hours": 5.0
+      }
+    ],
+    "goal": "gain muscle",
+    "allergies": [],
+    "macro_style": "balanced",
+    "text_input": "I do not want Sandwich, Baguette, Roast Beef, Multigrain Baguette.",
+    "meal_amount": 6
+  },
+  {
+    "id": 7,
+    "age": 35,
+    "gender": "female",
+    "weight": 37.4,
+    "height": 150.0,
+    "daily_activity": "extra active",
+    "activities": [
+      {
+        "intensity": "high",
+        "hours": 3.0
+      },
+      {
+        "intensity": "very_high",
+        "hours": 3.0
+      },
+      {
+        "intensity": "high",
+        "hours": 4.0
+      }
+    ],
+    "goal": "gain muscle",
+    "allergies": [],
+    "macro_style": "diabetic_friendly",
+    "text_input": "I do not want Liver Pate.",
+    "meal_amount": 5
+  },
+  {
+    "id": 8,
+    "age": 38,
+    "gender": "female",
+    "weight": 107.1,
+    "height": 179.0,
+    "daily_activity": "sedentary",
+    "activities": [
+      {
+        "intensity": "moderate",
+        "hours": 4.0
+      }
+    ],
+    "goal": "lose weight",
+    "allergies": [],
+    "macro_style": "diabetic_friendly",
+    "text_input": "I do not want Egg And Ham Casserole.",
+    "meal_amount": 3
+  },
+  {
+    "id": 9,
+    "age": 49,
+    "gender": "female",
+    "weight": 53.4,
+    "height": 173.0,
+    "daily_activity": "very active",
+    "activities": [],
+    "goal": "gain muscle",
+    "allergies": [],
+    "macro_style": "balanced",
+    "text_input": "I do not want Vegetable Egg Casserole.",
+    "meal_amount": 3
+  },
+  {
+    "id": 11,
+    "age": 62,
+    "gender": "female",
+    "weight": 65.8,
+    "height": 158.0,
+    "daily_activity": "very active",
+    "activities": [
+      {
+        "intensity": "moderate",
+        "hours": 1.0
+      }
+    ],
+    "goal": "gain muscle",
+    "allergies": [],
+    "macro_style": "balanced",
+    "text_input": "I do not want Cream Quark, 4.3% Fat.",
+    "meal_amount": 4
+  },
+  {
+    "id": 12,
+    "age": 50,
+    "gender": "female",
+    "weight": 72.5,
+    "height": 176.0,
+    "daily_activity": "lightly active",
+    "activities": [
+      {
+        "intensity": "very_high",
+        "hours": 4.0
+      }
+    ],
+    "goal": "lose weight",
+    "allergies": [
+      "fish"
+    ],
+    "macro_style": "balanced",
+    "text_input": "I do not want Chicken Hash, Potato, Without Egg.",
+    "meal_amount": 3
+  },
+  {
+    "id": 13,
+    "age": 19,
+    "gender": "male",
+    "weight": 97.2,
+    "height": 197.0,
+    "daily_activity": "moderately active",
+    "activities": [
+      {
+        "intensity": "low",
+        "hours": 4.0
+      }
+    ],
+    "goal": "gain muscle",
+    "allergies": [
+      "eggs"
+    ],
+    "macro_style": "vegan",
+    "text_input": "I do not want Bean Stew.",
+    "meal_amount": 5
+  },
+  {
+    "id": 15,
+    "age": 63,
+    "gender": "female",
+    "weight": 42.1,
+    "height": 151.0,
+    "daily_activity": "extra active",
+    "activities": [],
+    "goal": "gain muscle",
+    "allergies": [
+      "gluten"
+    ],
+    "macro_style": "heart_healthy",
+    "text_input": "I do not want Omelette, Japanese Tamago.",
+    "meal_amount": 3
+  },
+  {
+    "id": 16,
+    "age": 42,
+    "gender": "male",
+    "weight": 66.2,
+    "height": 184.0,
+    "daily_activity": "lightly active",
+    "activities": [],
+    "goal": "maintain",
+    "allergies": [
+      "shellfish"
+    ],
+    "macro_style": "heart_healthy",
+    "text_input": "I do not want Sandwich, Baguette, Cold Smoked Salmon, Egg, Lettuce.",
+    "meal_amount": 4
+  },
+  {
+    "id": 17,
+    "age": 24,
+    "gender": "female",
+    "weight": 54.2,
+    "height": 163.0,
+    "daily_activity": "sedentary",
+    "activities": [
+      {
+        "intensity": "moderate",
+        "hours": 4.0
+      },
+      {
+        "intensity": "very_high",
+        "hours": 1.0
+      }
+    ],
+    "goal": "lose weight",
+    "allergies": [],
+    "macro_style": "keto",
+    "text_input": "I do not want Hard-Boiled Egg And Cottage Cheese Mixture.",
+    "meal_amount": 4
+  },
+  {
+    "id": 20,
+    "age": 44,
+    "gender": "female",
+    "weight": 38.5,
+    "height": 150.0,
+    "daily_activity": "lightly active",
+    "activities": [],
+    "goal": "gain muscle",
+    "allergies": [],
+    "macro_style": "balanced",
+    "text_input": "I do not want Chicken Hash, Potato, Without Egg.",
+    "meal_amount": 3
+  },
+  {
+    "id": 21,
+    "age": 38,
+    "gender": "female",
+    "weight": 88.2,
+    "height": 179.0,
+    "daily_activity": "extra active",
+    "activities": [],
+    "goal": "maintain",
+    "allergies": [],
+    "macro_style": "diabetic_friendly",
+    "text_input": "I do not want Bacon Salad With Egg And Beans, Without Dressing.",
+    "meal_amount": 5
+  },
+  {
+    "id": 24,
+    "age": 51,
+    "gender": "male",
+    "weight": 95.6,
+    "height": 187.0,
+    "daily_activity": "moderately active",
+    "activities": [],
+    "goal": "lose weight",
+    "allergies": [
+      "milk"
+    ],
+    "macro_style": "diabetic_friendly",
+    "text_input": "I do not want Rainbow Trout Fillet, Salt-Cured.",
+    "meal_amount": 6
+  },
+  {
+    "id": 25,
+    "age": 26,
+    "gender": "male",
+    "weight": 81.5,
+    "height": 176.0,
+    "daily_activity": "extra active",
+    "activities": [
+      {
+        "intensity": "high",
+        "hours": 3.0
+      }
+    ],
+    "goal": "lose weight",
+    "allergies": [],
+    "macro_style": "balanced",
+    "text_input": "I do not want Egg And Ham Casserole.",
+    "meal_amount": 5
+  },
+  {
+    "id": 27,
+    "age": 48,
+    "gender": "male",
+    "weight": 97.2,
+    "height": 168.0,
+    "daily_activity": "extra active",
+    "activities": [
+      {
+        "intensity": "high",
+        "hours": 6.0
+      },
+      {
+        "intensity": "moderate",
+        "hours": 2.0
+      }
+    ],
+    "goal": "lose weight",
+    "allergies": [
+      "gluten"
+    ],
+    "macro_style": "heart_healthy",
+    "text_input": "I do not want Omelette, Potato Omelette.",
+    "meal_amount": 6
+  },
+  {
+    "id": 28,
+    "age": 61,
+    "gender": "female",
+    "weight": 55.9,
+    "height": 169.0,
+    "daily_activity": "very active",
+    "activities": [],
+    "goal": "maintain",
+    "allergies": [],
+    "macro_style": "heart_healthy",
+    "text_input": "I do not want Sandwich, Baguette, Cold Smoked Salmon, Egg, Lettuce.",
+    "meal_amount": 3
+  },
+  {
+    "id": 31,
+    "age": 28,
+    "gender": "male",
+    "weight": 72.4,
+    "height": 183.0,
+    "daily_activity": "moderately active",
+    "activities": [
+      {
+        "intensity": "high",
+        "hours": 2.0
+      }
+    ],
+    "goal": "gain muscle",
+    "allergies": [],
+    "macro_style": "balanced",
+    "text_input": "I do not want Yoghurt, Plain, 1.5% Fat.",
+    "meal_amount": 6
+  },
+  {
+    "id": 32,
+    "age": 52,
+    "gender": "female",
+    "weight": 76.1,
+    "height": 160.0,
+    "daily_activity": "sedentary",
+    "activities": [],
+    "goal": "lose weight",
+    "allergies": [],
+    "macro_style": "balanced",
+    "text_input": "I do not want Ham, Cooked Ham, 3% Fat.",
+    "meal_amount": 3
+  },
+  {
+    "id": 33,
+    "age": 41,
+    "gender": "male",
+    "weight": 65.7,
+    "height": 169.0,
+    "daily_activity": "lightly active",
+    "activities": [
+      {
+        "intensity": "very_high",
+        "hours": 2.0
+      }
+    ],
+    "goal": "maintain",
+    "allergies": [],
+    "macro_style": "vegan",
+    "text_input": "I do not want Bean Stew, Water, Dried Beans.",
+    "meal_amount": 3
+  },
+  {
+    "id": 34,
+    "age": 57,
+    "gender": "female",
+    "weight": 80.8,
+    "height": 169.0,
+    "daily_activity": "moderately active",
+    "activities": [
+      {
+        "intensity": "high",
+        "hours": 1.0
+      }
+    ],
+    "goal": "gain muscle",
+    "allergies": [],
+    "macro_style": "heart_healthy",
+    "text_input": "I do not want Sandwich, Baguette, Cold Smoked Salmon, Egg, Lettuce.",
+    "meal_amount": 5
+  }
+]

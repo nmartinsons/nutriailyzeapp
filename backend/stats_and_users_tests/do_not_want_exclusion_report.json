@@ -1,0 +1,178 @@
+{
+  "total_rows": 24,
+  "evaluated_rows": 24,
+  "skipped_no_negation": 0,
+  "success_excluded": 24,
+  "violations_present": 0,
+  "exclusion_success_rate": 100.0,
+  "details": [
+    {
+      "id": 1,
+      "text_input": "I do not want Skyr, Plain, 4% Fat.",
+      "status": "success_excluded",
+      "negated_food": "Skyr, Plain, 4% Fat",
+      "matched_food": null
+    },
+    {
+      "id": 3,
+      "text_input": "I do not want Oven-Baked Beef Steak Mince Pancake.",
+      "status": "success_excluded",
+      "negated_food": "Oven-Baked Beef Steak Mince Pancake",
+      "matched_food": null
+    },
+    {
+      "id": 4,
+      "text_input": "I do not want Beetroot Feta Cheese Omelette, Oven-Baked.",
+      "status": "success_excluded",
+      "negated_food": "Beetroot Feta Cheese Omelette, Oven-Baked",
+      "matched_food": null
+    },
+    {
+      "id": 5,
+      "text_input": "I do not want Bean Stew.",
+      "status": "success_excluded",
+      "negated_food": "Bean Stew",
+      "matched_food": null
+    },
+    {
+      "id": 6,
+      "text_input": "I do not want Sandwich, Baguette, Roast Beef, Multigrain Baguette.",
+      "status": "success_excluded",
+      "negated_food": "Sandwich, Baguette, Roast Beef, Multigrain Baguette",
+      "matched_food": null
+    },
+    {
+      "id": 7,
+      "text_input": "I do not want Liver Pate.",
+      "status": "success_excluded",
+      "negated_food": "Liver Pate",
+      "matched_food": null
+    },
+    {
+      "id": 8,
+      "text_input": "I do not want Egg And Ham Casserole.",
+      "status": "success_excluded",
+      "negated_food": "Egg And Ham Casserole",
+      "matched_food": null
+    },
+    {
+      "id": 9,
+      "text_input": "I do not want Vegetable Egg Casserole.",
+      "status": "success_excluded",
+      "negated_food": "Vegetable Egg Casserole",
+      "matched_food": null
+    },
+    {
+      "id": 11,
+      "text_input": "I do not want Cream Quark, 4.3% Fat.",
+      "status": "success_excluded",
+      "negated_food": "Cream Quark, 4.3% Fat",
+      "matched_food": null
+    },
+    {
+      "id": 12,
+      "text_input": "I do not want Chicken Hash, Potato, Without Egg.",
+      "status": "success_excluded",
+      "negated_food": "Chicken Hash, Potato, Without Egg",
+      "matched_food": null
+    },
+    {
+      "id": 13,
+      "text_input": "I do not want Bean Stew.",
+      "status": "success_excluded",
+      "negated_food": "Bean Stew",
+      "matched_food": null
+    },
+    {
+      "id": 15,
+      "text_input": "I do not want Omelette, Japanese Tamago.",
+      "status": "success_excluded",
+      "negated_food": "Omelette, Japanese Tamago",
+      "matched_food": null
+    },
+    {
+      "id": 16,
+      "text_input": "I do not want Sandwich, Baguette, Cold Smoked Salmon, Egg, Lettuce.",
+      "status": "success_excluded",
+      "negated_food": "Sandwich, Baguette, Cold Smoked Salmon, Egg, Lettuce",
+      "matched_food": null
+    },
+    {
+      "id": 17,
+      "text_input": "I do not want Hard-Boiled Egg And Cottage Cheese Mixture.",
+      "status": "success_excluded",
+      "negated_food": "Hard-Boiled Egg And Cottage Cheese Mixture",
+      "matched_food": null
+    },
+    {
+      "id": 20,
+      "text_input": "I do not want Chicken Hash, Potato, Without Egg.",
+      "status": "success_excluded",
+      "negated_food": "Chicken Hash, Potato, Without Egg",
+      "matched_food": null
+    },
+    {
+      "id": 21,
+      "text_input": "I do not want Bacon Salad With Egg And Beans, Without Dressing.",
+      "status": "success_excluded",
+      "negated_food": "Bacon Salad With Egg And Beans, Without Dressing",
+      "matched_food": null
+    },
+    {
+      "id": 24,
+      "text_input": "I do not want Rainbow Trout Fillet, Salt-Cured.",
+      "status": "success_excluded",
+      "negated_food": "Rainbow Trout Fillet, Salt-Cured",
+      "matched_food": null
+    },
+    {
+      "id": 25,
+      "text_input": "I do not want Egg And Ham Casserole.",
+      "status": "success_excluded",
+      "negated_food": "Egg And Ham Casserole",
+      "matched_food": null
+    },
+    {
+      "id": 27,
+      "text_input": "I do not want Omelette, Potato Omelette.",
+      "status": "success_excluded",
+      "negated_food": "Omelette, Potato Omelette",
+      "matched_food": null
+    },
+    {
+      "id": 28,
+      "text_input": "I do not want Sandwich, Baguette, Cold Smoked Salmon, Egg, Lettuce.",
+      "status": "success_excluded",
+      "negated_food": "Sandwich, Baguette, Cold Smoked Salmon, Egg, Lettuce",
+      "matched_food": null
+    },
+    {
+      "id": 31,
+      "text_input": "I do not want Yoghurt, Plain, 1.5% Fat.",
+      "status": "success_excluded",
+      "negated_food": "Yoghurt, Plain, 1.5% Fat",
+      "matched_food": null
+    },
+    {
+      "id": 32,
+      "text_input": "I do not want Ham, Cooked Ham, 3% Fat.",
+      "status": "success_excluded",
+      "negated_food": "Ham, Cooked Ham, 3% Fat",
+      "matched_food": null
+    },
+    {
+      "id": 33,
+      "text_input": "I do not want Bean Stew, Water, Dried Beans.",
+      "status": "success_excluded",
+      "negated_food": "Bean Stew, Water, Dried Beans",
+      "matched_food": null
+    },
+    {
+      "id": 34,
+      "text_input": "I do not want Sandwich, Baguette, Cold Smoked Salmon, Egg, Lettuce.",
+      "status": "success_excluded",
+      "negated_food": "Sandwich, Baguette, Cold Smoked Salmon, Egg, Lettuce",
+      "matched_food": null
+    }
+  ]
+}
