@@ -406,7 +406,7 @@ class KNN:
         return False  # Different foods
     
     # This function is designed to find a neutral base food item (like bread, crackers, or veggies) that can be paired with intense toppings such as salty fish, cured meats, strong cheeses, or flavorful dips. 
-    def _find_neutral_base_for_topping(self, topping_name: str, target_grams: float = 100, ignore_keywords=None) -> dict | None:
+    def _find_neutral_base_for_topping(self, topping_name: str, target_grams: float = 100) -> dict | None:
         # Topping name is converted to lowercase for case-insensitive matching when searching for keywords in the food database
         topping_lower = topping_name.lower()
         
@@ -428,7 +428,6 @@ class KNN:
         )
         
         candidates = self.df[mask]
-        candidates = self._filter_by_keywords(candidates, ignore_keywords)
         
         # Fallback: if no matches, try the other category
         if candidates.empty:
@@ -439,7 +438,6 @@ class KNN:
                 (self.df['category'] == 'side')
             )
             candidates = self.df[mask]
-            candidates = self._filter_by_keywords(candidates, ignore_keywords)
         
         if candidates.empty:
             return None
@@ -1112,7 +1110,7 @@ class KNN:
             )
             
             if not has_base:
-                base_item = self._find_neutral_base_for_topping(main_name, target_grams=80.0, ignore_keywords=ignore_keywords)
+                base_item = self._find_neutral_base_for_topping(main_name, target_grams=80.0)
                 
                 if base_item:
                     self._add_booster(
